@@ -33,8 +33,8 @@ export async function createInvoice(formData: FormData) {
   } catch(error) {
     return { message: 'Database Error: Failed to Create Invoice.' };
   }
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
+  revalidatePath('/dashboard/announcements');
+  redirect('/dashboard/announcements');
 }
 
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
@@ -58,8 +58,8 @@ export async function updateInvoice(id: string, formData: FormData) {
   } catch(error) {
     return { message: 'Database Error: Failed to Update Invoice.' };
   }
-  revalidatePath('/dashboard/invoices');
-  redirect('/dashboard/invoices');
+  revalidatePath('/dashboard/announcements');
+  redirect('/dashboard/announcements');
 }
 
 export async function deleteInvoice(id: string) {
@@ -68,5 +68,5 @@ export async function deleteInvoice(id: string) {
   } catch(error) {
     return { message: 'Database Error: Failed to Delete Invoice.' };
   }
-  revalidatePath('/dashboard/invoices');
+  revalidatePath('/dashboard/announcements');
 }
