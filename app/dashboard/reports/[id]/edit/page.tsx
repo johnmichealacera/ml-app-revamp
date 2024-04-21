@@ -1,7 +1,12 @@
-import Form from '@/app/ui/announcements/edit-form';
-import Breadcrumbs from '@/app/ui/announcements/breadcrumbs';
+import Form from '@/app/ui/reports/edit-form';
+import Breadcrumbs from '@/app/ui/reports/breadcrumbs';
 import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Update Reports',
+};
  
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params?.id || '';
@@ -16,10 +21,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Announcements', href: '/dashboard/announcements' },
+          { label: 'Reports', href: '/dashboard/reports' },
           {
             label: 'Edit Invoice',
-            href: `/dashboard/announcements/${id}/edit`,
+            href: `/dashboard/reports/${id}/edit`,
             active: true,
           },
         ]}
