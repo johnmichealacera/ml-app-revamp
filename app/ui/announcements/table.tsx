@@ -5,6 +5,7 @@ import {
   CustomersTableType,
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
+import { ViewAnnouncement } from './buttons';
 
 export default async function CustomersTable({
   customers,
@@ -109,6 +110,11 @@ export default async function CustomersTable({
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {customer.total_paid}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
+                        <div className="flex justify-end gap-3">
+                          <ViewAnnouncement id={customer.id} />
+                        </div>
                       </td>
                     </tr>
                   ))}
