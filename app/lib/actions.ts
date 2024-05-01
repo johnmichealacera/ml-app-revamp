@@ -144,6 +144,46 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
   redirect('/dashboard/reports');
 }
 
+const UpdateAnnouncement = HelpAppFormSchema.omit({ id: true, date: true });
+
+export async function updateAnnouncement(id: string, prevState: State, formData: FormData) {
+  const userdata: any = await getUserdata();
+  const validatedFields = UpdateAnnouncement.safeParse({
+    personnelId: userdata?.id,
+    subject: formData.get('subject'),
+    description: formData.get('description'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Invoice.',
+    };
+  }
+  const { personnelId, subject, description } = validatedFields.data;
+
+    try{
+    await sql`
+      UPDATE announcements
+      SET personnel_id = ${userdata?.id}, subject = ${subject}, description = ${description}
+      WHERE id = ${id}
+    `;
+  
+  } catch(error) {
+    return { message: 'Database Error: Failed to Update Announcement.' };
+  }
+  revalidatePath('/dashboard/announcements');
+  redirect('/dashboard/announcements');
+}
+
+export async function deleteAnnouncement(id: string) {
+  try {
+    await sql`DELETE FROM announcements WHERE id = ${id}`;
+  } catch(error) {
+    return { message: 'Database Error: Failed to Delete Announcement.' };
+  }
+  revalidatePath('/dashboard/announcements');
+}
+
 export async function deleteInvoice(id: string) {
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;

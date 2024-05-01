@@ -271,12 +271,12 @@ export async function fetchAnnouncementById(id: string) {
   try {
     const data = await sql`
       SELECT
-        announcement.id,
-        announcement.personnel_id,
-        announcement.subject,
-        announcement.description
-      FROM announcement
-      WHERE announcement.id = ${id};
+        announcements.id,
+        announcements.personnel_id,
+        announcements.subject,
+        announcements.description
+      FROM announcements
+      WHERE announcements.id = ${id};
     `;
 
     const announcement = data.rows.map((announcement) => ({

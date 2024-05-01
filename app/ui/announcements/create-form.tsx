@@ -20,7 +20,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6" aria-describedby="form-error">
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <label htmlFor="subject" className="mb-2 block text-sm font-medium">
             Enter subject
           </label>
           <div className="relative mt-2 rounded-md">
@@ -56,7 +56,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 name="description"
                 placeholder="Enter description"
                 className="block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-none placeholder-gray-500 resize-none"
-                rows={5} // Set the number of visible rows
+                rows={5}
                 aria-describedby="description-error"
               />
 

@@ -1,6 +1,9 @@
+"use client"
+
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteInvoice } from '@/app/lib/actions';
+import { deleteAnnouncement, deleteInvoice } from '@/app/lib/actions';
+import { useState } from 'react';
 
 export function CreateAnnouncement() {
   return (
@@ -25,14 +28,41 @@ export function UpdateAnnouncement({ id }: { id: string }) {
   );
 }
 
-export function DeleteInvoice({ id }: { id: string }) {
-  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
+export function DeleteAnnouncement({ id }: { id: string }) {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleDelete = () => {
+    deleteAnnouncement(id);
+    setShowModal(false);
+  };
+  
+
   return (
-    <form action={deleteInvoiceWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+    <>
+      <button
+        onClick={() => setShowModal(true)}
+        className="rounded-md border p-2 hover:bg-gray-100"
+      >
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
       </button>
-    </form>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+          <div className="fixed inset-0 bg-black opacity-25"></div>
+          <div className="bg-white rounded-lg p-4 max-w-md mx-auto relative">
+            <p className="text-center">Are you sure you want to delete this announcement?</p>
+            <div className="flex justify-center mt-4">
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 mr-2 rounded-md">
+                Delete
+              </button>
+              <button onClick={() => setShowModal(false)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
