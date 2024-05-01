@@ -1,7 +1,7 @@
-import Pagination from '@/app/ui/reports/pagination';
+import Pagination from '@/app/ui/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/reports/table';
-import { CreateInvoice } from '@/app/ui/reports/buttons';
+import Table from '@/app/ui/announcements/table';
+import { CreateAnnouncement } from '@/app/ui/announcements/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
@@ -30,8 +30,8 @@ export default async function Page({
         <h1 className={`${lusitana.className} text-2xl`}>Announcements</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search invoices..." />
-        <CreateInvoice />
+        <Search placeholder="Search announcements..." />
+        <CreateAnnouncement />
       </div>
        <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

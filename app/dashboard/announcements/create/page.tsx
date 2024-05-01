@@ -1,5 +1,5 @@
-import Form from '@/app/ui/reports/create-form';
-import Breadcrumbs from '@/app/ui/reports/breadcrumbs';
+import Form from '@/app/ui/announcements/create-form';
+import Breadcrumbs from '@/app/ui/announcements/breadcrumbs';
 import { fetchCustomers } from '@/app/lib/data';
 import { Metadata } from 'next';
  

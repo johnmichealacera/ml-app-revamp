@@ -6,6 +6,8 @@ const users = [
     name: 'User',
     email: 'user@nextmail.com',
     password: '123456',
+    department: 'police',
+    imageUrl: 'https://live.staticflickr.com/65535/52764435723_c93a5fe909_h.jpg',
   },
 ];
 

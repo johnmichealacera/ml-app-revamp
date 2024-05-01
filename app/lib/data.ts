@@ -229,3 +229,63 @@ export async function getUser(email: string) {
     throw new Error('Failed to fetch user.');
   }
 }
+
+export async function fetchFilteredAnnouncements(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const announcements = await sql`
+      SELECT
+        announcements.id,
+        announcements.subject,
+        announcements.description,
+        announcements.date,
+        users.name,
+        users.email,
+        users.department,
+        users.image_url
+      FROM announcements
+      JOIN users ON announcements.personnel_id = users.id
+      WHERE
+        users.name ILIKE ${`%${query}%`} OR
+        users.email ILIKE ${`%${query}%`} OR
+        announcements.subject ILIKE ${`%${query}%`} OR
+        announcements.description ILIKE ${`%${query}%`}
+      ORDER BY announcements.date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return announcements.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch announcements.');
+  }
+}
+
+export async function fetchAnnouncementById(id: string) {
+  noStore();
+  try {
+    const data = await sql`
+      SELECT
+        announcement.id,
+        announcement.personnel_id,
+        announcement.subject,
+        announcement.description
+      FROM announcement
+      WHERE announcement.id = ${id};
+    `;
+
+    const announcement = data.rows.map((announcement) => ({
+      ...announcement,
+    }));
+
+    return announcement[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch announcement.');
+  }
+}

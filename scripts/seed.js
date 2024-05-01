@@ -16,6 +16,8 @@ async function seedUsers(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email TEXT NOT NULL UNIQUE,
+        department TEXT NOT NULL,
+        image_url TEXT NOT NULL,
         password TEXT NOT NULL
       );
     `;
@@ -27,8 +29,8 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+        INSERT INTO users (id, name, email, department, image_url, password)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${user.department}, ${user.imageUrl}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
       }),
@@ -160,6 +162,32 @@ async function seedRevenue(client) {
   }
 }
 
+async function seedAnnouncements(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    // Create the "announcements" table if it doesn't exist
+    const createTable = await client.sql`
+    CREATE TABLE IF NOT EXISTS announcements (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    personnel_id UUID NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    date DATE NOT NULL
+  );
+`;
+
+    console.log(`Created "announcements" table`);
+
+    return {
+      createTable,
+    };
+  } catch (error) {
+    console.error('Error seeding announcements:', error);
+    throw error;
+  }
+}
+
 async function main() {
   const client = await db.connect();
 
@@ -167,6 +195,7 @@ async function main() {
   await seedCustomers(client);
   await seedInvoices(client);
   await seedRevenue(client);
+  await seedAnnouncements(client);
 
   await client.end();
 }

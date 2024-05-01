@@ -1,7 +1,7 @@
 import { fetchCustomers, fetchFilteredCustomers, fetchInvoicesPages } from '@/app/lib/data';
-import Table from '@/app/ui/announcements/table';
+import Table from '@/app/ui/reports/table';
 import { lusitana } from '@/app/ui/fonts';
-import Pagination from '@/app/ui/reports/pagination';
+import Pagination from '@/app/ui/pagination';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
 import { Suspense } from 'react';

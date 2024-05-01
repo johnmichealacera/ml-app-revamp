@@ -4,7 +4,7 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { signIn } from '@/auth';
+import { getUserdata, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
  
 const FormSchema = z.object({
@@ -20,11 +20,26 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
+const HelpAppFormSchema = z.object({
+  id: z.string(),
+  personnelId: z.string({
+    invalid_type_error: 'Please select a personnel.',
+  }),
+  subject: z.string({
+    invalid_type_error: 'Please enter a subject.',
+  }).min(10),
+  description: z.string({
+    invalid_type_error: 'Please enter the description.',
+  }).min(20),
+  date: z.string(),
+});
+
 // This is temporary until @types/react-dom is updated
 export type State = {
   errors?: {
-    customerId?: string[];
-    amount?: string[];
+    personnelId?: string[];
+    subject?: string[];
+    description?: string[];
     status?: string[];
   };
   message?: string | null;
@@ -60,6 +75,40 @@ export async function createInvoice(prevState: State, formData: FormData) {
   }
   revalidatePath('/dashboard/reports');
   redirect('/dashboard/reports');
+}
+
+
+const CreateAnnouncement = HelpAppFormSchema.omit({ id: true, date: true });
+
+export async function createAnnouncement(prevState: State, formData: FormData) {
+  const userdata: any = await getUserdata();
+  const validatedFields = CreateAnnouncement.safeParse({
+    personnelId: userdata?.id,
+    subject: formData.get('subject'),
+    description: formData.get('description'),
+  });
+  
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Announcement.',
+    };
+  }
+  // Prepare data for insertion into the database
+  const { personnelId, subject, description } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
+  try {
+    await sql`
+      INSERT INTO announcements (personnel_id, subject, description, date)
+      VALUES (${personnelId}, ${subject}, ${description}, ${date})
+    `;
+
+  } catch(error) {
+    return { message: 'Database Error: Failed to Create Announcement.' };
+  }
+  revalidatePath('/dashboard/announcements');
+  redirect('/dashboard/announcements');
 }
 
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
