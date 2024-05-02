@@ -253,6 +253,7 @@ export async function fetchFilteredAnnouncements(
       WHERE
         users.name ILIKE ${`%${query}%`} OR
         users.email ILIKE ${`%${query}%`} OR
+        users.department ILIKE ${`%${query}%`} OR
         announcements.subject ILIKE ${`%${query}%`} OR
         announcements.description ILIKE ${`%${query}%`}
       ORDER BY announcements.date DESC
