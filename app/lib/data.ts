@@ -289,3 +289,24 @@ export async function fetchAnnouncementById(id: string) {
     throw new Error('Failed to fetch announcement.');
   }
 }
+
+export async function fetchAnnouncementsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM announcements
+    JOIN users ON announcements.personnel_id = users.id
+    WHERE
+      users.name ILIKE ${`%${query}%`} OR
+      users.email ILIKE ${`%${query}%`} OR
+      announcements.subject ILIKE ${`%${query}%`} OR
+      announcements.description ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of invoices.');
+  }
+}
