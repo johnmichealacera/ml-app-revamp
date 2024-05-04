@@ -199,7 +199,9 @@ async function seedReports(client) {
     name VARCHAR(255) NOT NULL,
     contact_number VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    status VARCHAR(255) NOT NULL,
     department VARCHAR(255) NOT NULL,
+    personnel_id UUID,
     date DATE NOT NULL
   );
 `;

@@ -4,8 +4,9 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { getUserdata, signIn } from '@/auth';
+import { auth, getUserdata, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { getUser } from './data';
  
 const FormSchema = z.object({
   id: z.string(),
@@ -186,11 +187,16 @@ export async function deleteAnnouncement(id: string) {
 
 export async function updateReport(id: string, prevState: State, formData: FormData) {
   const reportStatus = formData.get('status')?.toString();
+  const session = await auth();
+  let userdata;
+  if (session?.user?.email) {
+    userdata = await getUser(session?.user?.email);
+  }
 
     try{
     await sql`
       UPDATE reports
-      SET status = ${reportStatus}
+      SET status = ${reportStatus}, personnel_id = ${userdata?.id}
       WHERE id = ${id}
     `;
   
