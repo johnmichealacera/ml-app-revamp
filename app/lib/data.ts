@@ -308,6 +308,56 @@ export async function fetchAnnouncementsPages(query: string) {
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
+    throw new Error('Failed to fetch total number of announcements.');
+  }
+}
+
+export async function fetchFilteredReports(query: string, 
+  currentPage: number) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  try {
+    const data = await sql`
+		SELECT
+		  reports.id,
+		  reports.name,
+		  reports.contact_number,
+		  reports.department,
+		  reports.description,
+		  reports.date
+		FROM reports
+		WHERE
+      reports.name ILIKE ${`%${query}%`} OR
+      reports.contact_number ILIKE ${`%${query}%`} OR
+      reports.description ILIKE ${`%${query}%`} OR
+      reports.department ILIKE ${`%${query}%`}
+		ORDER BY reports.date DESC
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+	  `;
+
+    return data?.rows;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch reports table.');
+  }
+}
+
+export async function fetchReportsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM reports
+    WHERE
+      reports.name ILIKE ${`%${query}%`} OR
+      reports.contact_number ILIKE ${`%${query}%`} OR
+      reports.description ILIKE ${`%${query}%`} OR
+      reports.department ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of reports.');
   }
 }

@@ -188,6 +188,33 @@ async function seedAnnouncements(client) {
   }
 }
 
+async function seedReports(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    // Create the "reports" table if it doesn't exist
+    const createTable = await client.sql`
+    CREATE TABLE IF NOT EXISTS reports (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    contact_number VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    department VARCHAR(255) NOT NULL,
+    date DATE NOT NULL
+  );
+`;
+
+    console.log(`Created "reports" table`);
+
+    return {
+      createTable,
+    };
+  } catch (error) {
+    console.error('Error seeding reports:', error);
+    throw error;
+  }
+}
+
 async function main() {
   const client = await db.connect();
 
@@ -196,6 +223,7 @@ async function main() {
   await seedInvoices(client);
   await seedRevenue(client);
   await seedAnnouncements(client);
+  await seedReports(client);
 
   await client.end();
 }
