@@ -184,6 +184,23 @@ export async function deleteAnnouncement(id: string) {
   revalidatePath('/dashboard/announcements');
 }
 
+export async function updateReport(id: string, prevState: State, formData: FormData) {
+  const reportStatus = formData.get('status')?.toString();
+
+    try{
+    await sql`
+      UPDATE reports
+      SET status = ${reportStatus}
+      WHERE id = ${id}
+    `;
+  
+  } catch(error) {
+    return { message: 'Database Error: Failed to Update Report.' };
+  }
+  revalidatePath('/dashboard/reports');
+  redirect('/dashboard/reports');
+}
+
 export async function deleteInvoice(id: string) {
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;

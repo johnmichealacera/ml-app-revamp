@@ -324,12 +324,14 @@ export async function fetchFilteredReports(query: string,
 		  reports.contact_number,
 		  reports.department,
 		  reports.description,
+		  reports.status,
 		  reports.date
 		FROM reports
 		WHERE
       reports.name ILIKE ${`%${query}%`} OR
       reports.contact_number ILIKE ${`%${query}%`} OR
       reports.description ILIKE ${`%${query}%`} OR
+      reports.status ILIKE ${`%${query}%`} OR
       reports.department ILIKE ${`%${query}%`}
 		ORDER BY reports.date DESC
     LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
@@ -359,5 +361,31 @@ export async function fetchReportsPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of reports.');
+  }
+}
+
+export async function fetchReportById(id: string) {
+  noStore();
+  try {
+    const data = await sql`
+      SELECT
+        reports.id,
+        reports.name,
+        reports.contact_number,
+        reports.department,
+        reports.description,
+        reports.status
+      FROM reports
+      WHERE reports.id = ${id};
+    `;
+
+    const report = data.rows.map((item) => ({
+      ...item,
+    }));
+
+    return report[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch report.');
   }
 }

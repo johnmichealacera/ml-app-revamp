@@ -1,6 +1,7 @@
 import Search from '@/app/ui/search';
 import { ViewReport } from './buttons';
 import { formatDateToLocal } from '@/app/lib/utils';
+import ReportStatus from '../announcements/status';
 
 export default async function ReportsTable({
   reports,
@@ -63,6 +64,9 @@ export default async function ReportsTable({
                     <th scope="col" className="px-3 py-5 font-medium">
                       Description
                     </th>
+                    <th scope="col" className="px-3 py-5 font-medium">
+                      Status
+                    </th>
                     <th scope="col" className="px-4 py-5 font-medium">
                       Date
                     </th>
@@ -85,6 +89,9 @@ export default async function ReportsTable({
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {report.description}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        <ReportStatus status={report.status} />
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {formatDateToLocal(report.date)}
