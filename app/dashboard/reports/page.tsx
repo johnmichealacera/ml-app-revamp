@@ -1,4 +1,4 @@
-import { fetchFilteredCustomers, fetchFilteredReports, fetchReportsPages } from '@/app/lib/data';
+import { fetchFilteredReports, fetchReportsPages } from '@/app/lib/data';
 import Table from '@/app/ui/reports/table';
 import { lusitana } from '@/app/ui/fonts';
 import Pagination from '@/app/ui/pagination';
