@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { UpdateAnnouncement, DeleteAnnouncement } from '@/app/ui/announcements/buttons';
-import InvoiceStatus from '@/app/ui/announcements/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
+import { formatDateToLocal } from '@/app/lib/utils';
 import { fetchFilteredAnnouncements, fetchFilteredInvoices } from '@/app/lib/data';
 
 export default async function InvoicesTable({

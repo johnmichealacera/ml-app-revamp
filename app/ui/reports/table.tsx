@@ -87,8 +87,8 @@ export default async function ReportsTable({
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {report.department}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {report.description}
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm max-w-xs">
+                        <div className="truncate">{report.description}</div>
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         <ReportStatus status={report.status} />
