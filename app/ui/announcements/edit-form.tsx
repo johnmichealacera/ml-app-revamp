@@ -1,16 +1,10 @@
 'use client';
-
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
   ShieldExclamationIcon,
-  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { updateAnnouncement, updateInvoice } from '@/app/lib/actions';
+import { updateAnnouncement } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
 export default function EditAnnouncementForm({
@@ -94,7 +88,7 @@ export default function EditAnnouncementForm({
         >
           Cancel
         </Link>
-        <Button type="submit">Edit Invoice</Button>
+        <Button type="submit">Edit Announcement</Button>
       </div>
     </form>
   );

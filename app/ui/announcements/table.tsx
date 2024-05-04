@@ -1,16 +1,15 @@
 import Image from 'next/image';
 import { UpdateAnnouncement, DeleteAnnouncement } from '@/app/ui/announcements/buttons';
 import { formatDateToLocal } from '@/app/lib/utils';
-import { fetchFilteredAnnouncements, fetchFilteredInvoices } from '@/app/lib/data';
+import { fetchFilteredAnnouncements } from '@/app/lib/data';
 
-export default async function InvoicesTable({
+export default async function AnnouncementsTable({
   query,
   currentPage,
 }: {
   query: string;
   currentPage: number;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage);
   const announcements = await fetchFilteredAnnouncements(query, currentPage);
 
   return (

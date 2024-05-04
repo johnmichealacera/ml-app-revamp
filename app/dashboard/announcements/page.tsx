@@ -5,7 +5,7 @@ import { CreateAnnouncement } from '@/app/ui/announcements/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchAnnouncementsPages, fetchInvoicesPages } from '@/app/lib/data';
+import { fetchAnnouncementsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {

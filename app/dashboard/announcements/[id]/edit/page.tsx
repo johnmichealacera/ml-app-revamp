@@ -1,6 +1,6 @@
 import Form from '@/app/ui/announcements/edit-form';
 import Breadcrumbs from '@/app/ui/announcements/breadcrumbs';
-import { fetchAnnouncementById, fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
+import { fetchAnnouncementById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
  
@@ -10,9 +10,7 @@ export const metadata: Metadata = {
  
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params?.id || '';
-  const [invoice, customers, announcement] = await Promise.all([
-    fetchInvoiceById(id),
-    fetchCustomers(),
+  const [announcement] = await Promise.all([
     fetchAnnouncementById(id),
   ]);
   if (!announcement) {
