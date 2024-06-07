@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { auth, getUserdata, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { getUser } from './data';
+const bcrypt = require('bcrypt');
 
 const HelpAppFormSchema = z.object({
   id: z.string(),
@@ -144,4 +145,26 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function createUser(name: string, email:string, password: string, role: string) {
+  const userdata: any = await getUserdata();
+  if (userdata?.email === email) {
+    return {
+      errors: 'Error',
+      message: 'Email already created. Failed to Create User.',
+    };
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await sql`
+      INSERT INTO users (name, email, password, role)
+      VALUES (${name}, ${email}, ${hashedPassword}, ${role})
+    `;
+
+  } catch(error) {
+    return { message: 'Database Error: Failed to Create Announcement.' };
+  }
+  revalidatePath('/dashboard/announcements');
+  redirect('/dashboard/announcements');
 }
