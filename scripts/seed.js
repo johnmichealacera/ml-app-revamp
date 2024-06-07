@@ -1,6 +1,6 @@
 const { db } = require('@vercel/postgres');
 const {
-  revenue,
+  students,
   users,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
@@ -12,9 +12,7 @@ async function seedUsers(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        id_number TEXT NOT NULL UNIQUE,
-        email TEXT NOT NULL UNIQUE,
+        student_id UUID REFERENCES students(id) ON DELETE CASCADE,
         password TEXT NOT NULL
       );
     `;
@@ -26,8 +24,8 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (name, id_number, email, password)
-        VALUES (${user.name}, ${user.idNumber}, ${user.email}, ${hashedPassword})
+        INSERT INTO users (student_id, password)
+        VALUES (${user.student_id}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
       }),
@@ -45,103 +43,64 @@ async function seedUsers(client) {
   }
 }
 
-async function seedRevenue(client) {
+async function seedStudents(client) {
   try {
-    // Create the "revenue" table if it doesn't exist
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS revenue (
-        month VARCHAR(4) NOT NULL UNIQUE,
-        revenue INT NOT NULL
-      );
+    CREATE TABLE IF NOT EXISTS students (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      id_number TEXT NOT NULL UNIQUE,
+      first_name VARCHAR(255) NOT NULL,
+      middle_name VARCHAR(255),
+      last_name VARCHAR(255) NOT NULL,
+      suffix VARCHAR(50),
+      gender VARCHAR(20) NOT NULL,
+      civil_status VARCHAR(20) NOT NULL,
+      birthday DATE NOT NULL,
+      birth_place VARCHAR(255),
+      age INT,
+      nationality VARCHAR(50),
+      religion VARCHAR(50),
+      ethnicity VARCHAR(50),
+      email VARCHAR(255),
+      facebook VARCHAR(255),
+      skype VARCHAR(255),
+      zoom_account VARCHAR(255)
+  );
+  `;
+
+  console.log(`Created "students" table`);
+
+
+  // Insert data into the "users" table
+  const insertedStudents = await Promise.all(
+    students.map(async (student) => {
+      return client.sql`
+      INSERT INTO students (id, id_number, first_name, middle_name, last_name, suffix, gender, civil_status, birthday, birth_place, age, nationality, religion, ethnicity, email, facebook, skype, zoom_account)
+  VALUES
+      (${student.id}, ${student.id_number}, ${student.first_name}, ${student.middle_name}, ${student.last_name}, ${student.suffix}, ${student.gender}, ${student.civil_status}, ${student.birthday}, ${student.birth_place}, ${student.age}, ${student.nationality}, ${student.religion}, ${student.ethnicity}, ${student.email}, ${student.facebook}, ${student.skype}, ${student.zoom_account})
+      ON CONFLICT (id) DO NOTHING;
     `;
-
-    console.log(`Created "revenue" table`);
-
-    // Insert data into the "revenue" table
-    const insertedRevenue = await Promise.all(
-      revenue.map(
-        (rev) => client.sql`
-        INSERT INTO revenue (month, revenue)
-        VALUES (${rev.month}, ${rev.revenue})
-        ON CONFLICT (month) DO NOTHING;
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedRevenue.length} revenue`);
-
-    return {
-      createTable,
-      revenue: insertedRevenue,
-    };
-  } catch (error) {
-    console.error('Error seeding revenue:', error);
-    throw error;
-  }
-}
-
-async function seedAnnouncements(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the "announcements" table if it doesn't exist
-    const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS announcements (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    personnel_id UUID NOT NULL,
-    subject VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    date DATE NOT NULL
+    }),
   );
-`;
 
-    console.log(`Created "announcements" table`);
-
-    return {
-      createTable,
-    };
-  } catch (error) {
-    console.error('Error seeding announcements:', error);
-    throw error;
-  }
-}
-
-async function seedReports(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the "reports" table if it doesn't exist
-    const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS reports (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    contact_number VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    status VARCHAR(255) NOT NULL,
-    department VARCHAR(255) NOT NULL,
-    personnel_id UUID,
-    date DATE NOT NULL
-  );
-`;
-
-    console.log(`Created "reports" table`);
+    console.log(`Seeded ${insertedStudents.length} students`);
 
     return {
       createTable,
+      students: insertedStudents,
     };
   } catch (error) {
-    console.error('Error seeding reports:', error);
+    console.error('Error seeding students:', error);
     throw error;
   }
 }
 
 async function main() {
   const client = await db.connect();
-
+  await seedStudents(client);
   await seedUsers(client);
-  // await seedRevenue(client);
-  // await seedAnnouncements(client);
-  // await seedReports(client);
 
   await client.end();
 }

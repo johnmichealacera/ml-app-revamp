@@ -9,7 +9,7 @@ import {auth as auth1} from '@/auth';
  
 async function getUser(idNumber: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users where id_number=${idNumber}`;
+    const user = await sql<User>`SELECT * FROM users, students where users.student_id = students.id and students.id_number=${idNumber}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -19,7 +19,7 @@ async function getUser(idNumber: string): Promise<User | undefined> {
 
 async function getUserByEmail(email: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users where email=${email}`;
+    const user = await sql<User>`SELECT * FROM users, students where users.student_id = students.id and students.email=${email}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);

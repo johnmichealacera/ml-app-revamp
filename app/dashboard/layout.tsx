@@ -9,11 +9,13 @@ export const metadata: Metadata = {
  
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const userdata: any = await getUserdata();
+  const fullName = `${userdata?.first_name} ${userdata?.middle_name} ${userdata?.last_name}`;
+  
 
   return (
     <div className="flex flex-col h-screen">
       <header className="flex-none">
-        <HeaderNav studentName={userdata?.name}/>
+        <HeaderNav studentName={fullName}/>
       </header>
       <div className="flex flex-grow overflow-hidden">
         <aside className="w-full flex-none md:w-64">
