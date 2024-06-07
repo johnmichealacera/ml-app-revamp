@@ -1,16 +1,19 @@
 import SideNav from '@/app/ui/dashboard/sidenav';
 import { Metadata } from 'next';
-import HeaderNav from '../ui/dashboard/headernav';
+import HeaderNav from '../ui/dashboard/header-nav';
+import { getUserdata } from '@/auth';
  
 export const metadata: Metadata = {
   title: 'Dashboard',
 };
  
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const userdata: any = await getUserdata();
+
   return (
     <div className="flex flex-col h-screen">
       <header className="flex-none">
-        <HeaderNav />
+        <HeaderNav studentName={userdata?.name}/>
       </header>
       <div className="flex flex-grow overflow-hidden">
         <aside className="w-full flex-none md:w-64">

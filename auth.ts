@@ -17,10 +17,21 @@ async function getUser(idNumber: string): Promise<User | undefined> {
   }
 }
 
+async function getUserByEmail(email: string): Promise<User | undefined> {
+  try {
+    const user = await sql<User>`SELECT * FROM users where email=${email}`;
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
 export async function getUserdata() {
   const session = await auth1();
   if (session?.user?.email) {
-    const userdata = await getUser(session?.user?.email);
+    const userdata = await getUserByEmail(session?.user?.email);
+
     return userdata;
   }
   return session;
