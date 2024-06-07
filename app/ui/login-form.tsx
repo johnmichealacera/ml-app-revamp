@@ -82,9 +82,9 @@ export default function LoginForm() {
             </div>
           </div>
           <LoginButton />
-          <Button className="mt-4 w-50 bg-green-500" type="button" onClick={openModal}>
+          {/* <Button className="mt-4 w-50 bg-green-500" type="button" onClick={openModal}>
             Create New Account<PlusIcon className="ml-auto h-5 w-5 text-gray-50" />
-          </Button>
+          </Button> */}
           <div
             className="flex h-8 items-end space-x-1"
             aria-live="polite"

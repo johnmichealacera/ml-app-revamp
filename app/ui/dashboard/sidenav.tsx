@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
-import HelpAppLogo from '@/app/ui/help-app-logo';
+import HelpAppLogo from '@/app/ui/tec-voc-portal-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { getUserdata, signOut } from '@/auth';
 
