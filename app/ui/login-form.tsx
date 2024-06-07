@@ -22,13 +22,11 @@ export default function LoginForm() {
     setIsModalOpen(true);
   }
   const closeModal = () => setIsModalOpen(false);
-  const [email, setEmail] = useState('');
+  const [idNumber, setIdNumber] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
   const clearForm = () => {
-    setEmail('');
+    setIdNumber('');
     setPassword('');
-    setRole('');
   };
 
   return (
@@ -42,19 +40,19 @@ export default function LoginForm() {
             <div>
               <label
                 className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                htmlFor="email"
+                htmlFor="idNumber"
               >
-                Email
+                Student ID No 
               </label>
               <div className="relative">
                 <input
                   className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
+                  id="idNumber"
+                  type="text"
+                  name="idNumber"
+                  value={idNumber}
+                  onChange={(e) => setIdNumber(e.target.value)}
+                  placeholder="Enter your ID number"
                   required
                 />
                 <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -79,29 +77,6 @@ export default function LoginForm() {
                   required
                   minLength={6}
                 />
-                <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <label
-                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                htmlFor="role"
-              >
-                Role
-              </label>
-              <div className="relative">
-                <select
-                  className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 pr-3 text-sm outline-2 placeholder:text-gray-500"
-                  id="role"
-                  name="role"
-                  required
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <option value="">Select role...</option>
-                  <option value="student">Student</option>
-                  <option value="instructor">Instructor</option>
-                  <option value="administrator">Administrator</option>
-                </select>
                 <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>

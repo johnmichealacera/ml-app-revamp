@@ -4,32 +4,20 @@ const users = [
   {
     name: 'Junifer Banaybanay',
     email: 'user1@nextmail.com',
+    idNumber: '2021-0001',
     password: '123456',
-    role: 'student',
   },
   {
     name: 'Maricel Alabat',
     email: 'user2@nextmail.com',
+    idNumber: '2021-0002',
     password: '123456',
-    role: 'student',
   },
   {
     name: 'Robert Dacera',
     email: 'user3@nextmail.com',
+    idNumber: '2021-0003',
     password: '123456',
-    role: 'student',
-  },
-  {
-    name: 'Romnick Gelsano Canta',
-    email: 'user4@nextmail.com',
-    password: '123456',
-    role: 'instructor',
-  },
-  {
-    name: 'Admin 1',
-    email: 'user5@nextmail.com',
-    password: '123456',
-    role: 'administrator',
   },
 ];
 

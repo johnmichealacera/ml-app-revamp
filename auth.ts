@@ -7,9 +7,9 @@ import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import {auth as auth1} from '@/auth';
  
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(idNumber: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
+    const user = await sql<User>`SELECT * FROM users where id_number=${idNumber}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -32,14 +32,14 @@ export const { auth, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6), role: z.string().min(4) })
+          .object({ idNumber: z.string().min(4), password: z.string().min(6) })
           .safeParse(credentials);
         if (parsedCredentials.success) {
-          const { email, password, role } = parsedCredentials.data;
-          const user = await getUser(email);
+          const { idNumber, password } = parsedCredentials.data;
+          const user = await getUser(idNumber);
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch && role === user?.role) {
+          if (passwordsMatch) {
             return user;
           }
         }
