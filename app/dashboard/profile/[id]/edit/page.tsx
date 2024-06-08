@@ -10,25 +10,30 @@ export const metadata: Metadata = {
  
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params?.id || '';
-  const [student] = await Promise.all([
-    fetchStudentById(id),
-  ]);
-  if (!student) {
+  try {
+    const [student] = await Promise.all([
+      fetchStudentById(id),
+    ]);
+    if (!student) {
+      notFound();
+    }
+    
+    return (
+      <main>
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: 'Profile', href: '/dashboard/profile' },
+            {
+              label: 'Edit Profile',
+              href: `/dashboard/profile/${id}/edit`,
+              active: true,
+            },
+          ]}
+        />
+        <Form student={student} />
+      </main>
+    );
+  } catch (e) {
     notFound();
   }
-  return (
-    <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: 'Profile', href: '/dashboard/profile' },
-          {
-            label: 'Edit Profile',
-            href: `/dashboard/profile/${id}/edit`,
-            active: true,
-          },
-        ]}
-      />
-      <Form student={student} />
-    </main>
-  );
 }
