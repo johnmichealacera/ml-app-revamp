@@ -62,6 +62,7 @@ export default function HeaderNav({studentName}: {studentName: string}) {
                         'bg-sky-100 text-blue-600': link.href === pathname
                       }
                     )}
+                    onClick={() => setIsOpen(!isOpen)}
                   >
                     <LinkIcon className="w-6" />
                     <p className="md:block">{link.name}</p>

@@ -1,30 +1,36 @@
 import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
-import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
+import { CardsSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
 import { getUserdata } from '@/auth';
 import { formatDateToLocal } from '@/app/lib/utils';
- 
+import Link from 'next/link';
+
 export const metadata: Metadata = {
   title: 'Profile',
 };
- 
+
 export default async function Page() {
   const userdata: any = await getUserdata();
-  console.log('userdata', userdata);
   
   return (
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Profile
-      </h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className={`${lusitana.className} text-xl md:text-2xl`}>
+          Profile
+        </h1>
+        <Link href={`/dashboard/profile/${userdata?.id}/edit`}>
+          <button className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">
+            Edit
+          </button>
+        </Link>
+      </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Suspense fallback={<CardsSkeleton />}>
           {/* <CardWrapper /> */}
         </Suspense>
       </div>
       <div className="mt-6 w-full">
-        {/* TODO: Think of what chart to add in here */}
         <Suspense fallback={<RevenueChartSkeleton />}>
           <div className="bg-gray-100">
             <div className="max-w-4xl bg-white rounded-lg shadow-md">

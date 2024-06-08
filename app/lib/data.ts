@@ -240,3 +240,26 @@ export async function fetchLatestReports() {
     throw new Error('Failed to fetch the latest reports.');
   }
 }
+
+// tec voc portal
+
+export async function fetchStudentById(id: string) {
+  noStore();
+  try {
+    const data = await sql`
+      SELECT
+        *
+      FROM students
+      WHERE students.id = ${id};
+    `;
+
+    const student = data.rows.map((item) => ({
+      ...item,
+    }));
+
+    return student[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch student.');
+  }
+}
