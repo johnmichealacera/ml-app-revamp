@@ -293,7 +293,8 @@ export async function fetchStudentBySession() {
   }
 }
 
-export async function fetchFilteredSubjects(
+export async function fetchUnEnrolledSubjects(
+  idNumber: string,
   query: string,
   currentPage: number,
 ) {
@@ -302,14 +303,33 @@ export async function fetchFilteredSubjects(
 
   try {
     const subjects = await sql`
-      SELECT
-        *
-      FROM subjects
-      WHERE
-        subjects.subject_title ILIKE ${`%${query}%`} OR
-        subjects.subject_description ILIKE ${`%${query}%`}
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    `;
+    SELECT
+    subjects.*
+FROM
+    subjects
+LEFT JOIN
+    enrollments ON subjects.id = enrollments.subject_id AND enrollments.student_id = (
+        SELECT id FROM students WHERE id_number = ${idNumber}
+    )
+WHERE
+    enrollments.subject_id IS NULL
+AND 
+    (subjects.subject_title ILIKE ${`%${query}%`} OR
+     subjects.subject_description ILIKE ${`%${query}%`})
+LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+`;
+    // const subjects = await sql`
+    //   SELECT
+    //     *
+    //   FROM students
+    //   JOIN enrollments ON enrollments.student_id = students.id
+    //   JOIN subjects ON subjects.id = enrollments.subject_id
+    //   WHERE
+    //     students.id_number = ${idNumber} AND
+    //     (subjects.subject_title ILIKE ${`%${query}%`} OR
+    //     subjects.subject_description ILIKE ${`%${query}%`})
+    //   LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    // `;
 
     return subjects.rows;
   } catch (error) {
@@ -333,5 +353,55 @@ export async function fetchSubjectsPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of subjects.');
+  }
+}
+
+export async function fetchClassesPages(idNumber: string, query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+      FROM students
+      JOIN enrollments ON enrollments.student_id = students.id
+      JOIN subjects ON subjects.id = enrollments.subject_id
+      WHERE
+        students.id_number = ${idNumber} AND
+        (subjects.subject_title ILIKE ${`%${query}%`} OR
+        subjects.subject_description ILIKE ${`%${query}%`})
+    `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of classes.');
+  }
+}
+
+export async function fetchEnrolledSubjects(
+  idNumber: string,
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const subjects = await sql`
+      SELECT
+        *
+      FROM students
+      JOIN enrollments ON enrollments.student_id = students.id
+      JOIN subjects ON subjects.id = enrollments.subject_id
+      WHERE
+        students.id_number = ${idNumber} AND
+        (subjects.subject_title ILIKE ${`%${query}%`} OR
+        subjects.subject_description ILIKE ${`%${query}%`})
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return subjects.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch subjects.');
   }
 }

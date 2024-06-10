@@ -258,3 +258,15 @@ export async function updateStudent(id: string, prevState: any, formData: FormDa
   revalidatePath('/dashboard/profile');
   redirect('/dashboard/profile');
 }
+
+export async function updateEnrollment(student_id: string, subject_id: string) {
+  try {
+    await sql`
+      INSERT INTO enrollments (student_id, subject_id)
+      VALUES (${student_id}, ${subject_id})
+    `;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update enrollment.');
+  }
+}

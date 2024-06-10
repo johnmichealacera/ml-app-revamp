@@ -1,7 +1,7 @@
 import Search from '@/app/ui/search';
 import { ViewReport } from './buttons';
 import { formatDateToLocal } from '@/app/lib/utils';
-import ReportStatus from '../announcements/status';
+import ReportStatus from '../classes/status';
 
 export default async function ReportsTable({
   reports,

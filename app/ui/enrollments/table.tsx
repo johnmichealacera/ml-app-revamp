@@ -1,6 +1,6 @@
-import { UpdateAnnouncement } from '@/app/ui/announcements/buttons';
-import { fetchFilteredSubjects } from '@/app/lib/data';
-import { AddSubject } from './buttons';
+import { fetchUnEnrolledSubjects } from '@/app/lib/data';
+import { EnrollSubject } from './buttons';
+import { getUserdata } from '@/auth';
 
 export default async function EnrollmentsTable({
   query,
@@ -9,7 +9,8 @@ export default async function EnrollmentsTable({
   query: string;
   currentPage: number;
 }) {
-  const subjects = await fetchFilteredSubjects(query, currentPage);
+  const userdata: any = await getUserdata();
+  const subjects = await fetchUnEnrolledSubjects(userdata?.id_number, query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
@@ -28,7 +29,7 @@ export default async function EnrollmentsTable({
                     <p className="text-sm md:text-base">{subject.subject_description}</p>
                   </div>
                   <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    <UpdateAnnouncement id={subject.id} />
+                    <EnrollSubject id={subject.id} studentId={userdata?.student_id}/>
                   </div>
                 </div>
               </div>
@@ -68,7 +69,7 @@ export default async function EnrollmentsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <AddSubject />
+                      <EnrollSubject id={subject.id} studentId={userdata?.student_id}/>
                     </div>
                   </td>
                 </tr>

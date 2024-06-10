@@ -1,5 +1,5 @@
 import Form from '@/app/ui/reports/view-form';
-import Breadcrumbs from '@/app/ui/announcements/breadcrumbs';
+import Breadcrumbs from '@/app/ui/classes/breadcrumbs';
 import { fetchReportById } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

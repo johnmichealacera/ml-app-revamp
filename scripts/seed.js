@@ -183,31 +183,31 @@ async function seedEnrollments(client) {
       CREATE TABLE IF NOT EXISTS enrollments (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         student_id UUID REFERENCES students(id) ON DELETE CASCADE,
-        course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
+        subject_id UUID REFERENCES subjects(id) ON DELETE CASCADE,
         enrollment_date DATE DEFAULT CURRENT_DATE,
-        grade NUMERIC(5, 2),
+        grade NUMERIC(5, 2)
       );
     `;
 
     console.log(`Created "enrollments" table`);
 
     // Insert data into the "enrollments" table
-    const insertedEnrollments = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        return client.sql`
-        INSERT INTO enrollments (student_id, course_id, grade)
-        VALUES (${enrollment.student_id}, ${enrollment.course_id}, ${enrollment.grade})
-        ON CONFLICT (id) DO NOTHING;
-      `;
-      }),
-    );
+    // const insertedEnrollments = await Promise.all(
+    //   enrollments.map(async (enrollment) => {
+    //     return client.sql`
+    //     INSERT INTO enrollments (student_id, course_id, grade)
+    //     VALUES (${enrollment.student_id}, ${enrollment.course_id}, ${enrollment.grade})
+    //     ON CONFLICT (id) DO NOTHING;
+    //   `;
+    //   }),
+    // );
 
-    console.log(`Seeded ${insertedEnrollments.length} enrollments`);
+    // console.log(`Seeded ${insertedEnrollments.length} enrollments`);
 
-    return {
-      createTable,
-      enrollments: insertedEnrollments,
-    };
+    // return {
+    //   createTable,
+    //   enrollments: insertedEnrollments,
+    // };
   } catch (error) {
     console.error('Error seeding enrollment:', error);
     throw error;
@@ -219,7 +219,8 @@ async function main() {
   // await seedCourses(client);
   // await seedSubjects(client);
   // await seedStudents(client);
-  await seedUsers(client);
+  // await seedUsers(client);
+  await seedEnrollments(client);
 
   await client.end();
 }

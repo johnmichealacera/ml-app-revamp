@@ -1,7 +1,7 @@
 import Pagination from '@/app/ui/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/enrollments/table';
-import { CreateAnnouncement } from '@/app/ui/announcements/buttons';
+import { CreateAnnouncement } from '@/app/ui/classes/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';

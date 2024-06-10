@@ -1,5 +1,5 @@
-import Form from '@/app/ui/announcements/edit-form';
-import Breadcrumbs from '@/app/ui/announcements/breadcrumbs';
+import Form from '@/app/ui/classes/edit-form';
+import Breadcrumbs from '@/app/ui/classes/breadcrumbs';
 import { fetchAnnouncementById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';

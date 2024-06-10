@@ -15,7 +15,7 @@ const links = [
   { name: 'Enrollment', href: '/dashboard/enrollment', icon: UserGroupIcon },
   {
     name: 'Classes',
-    href: '#',
+    href: '/dashboard/classes',
     icon: DocumentDuplicateIcon,
   },
 ];
