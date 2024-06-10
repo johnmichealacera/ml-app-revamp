@@ -14,8 +14,8 @@ const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   { name: 'Enrollment', href: '/dashboard/enrollment', icon: UserGroupIcon },
   {
-    name: 'Reports',
-    href: '/dashboard/reports',
+    name: 'Classes',
+    href: '#',
     icon: DocumentDuplicateIcon,
   },
 ];

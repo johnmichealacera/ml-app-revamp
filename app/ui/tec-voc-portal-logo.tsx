@@ -1,9 +1,7 @@
 import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
-import { getUserdata } from '@/auth';
 
 export default async function TecVocPortalLogo() {
-  const userdata: any = await getUserdata();
 
   return (
     <div

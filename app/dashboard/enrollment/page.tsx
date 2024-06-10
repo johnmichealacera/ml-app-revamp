@@ -1,32 +1,43 @@
+import Pagination from '@/app/ui/pagination';
+import Search from '@/app/ui/search';
+import Table from '@/app/ui/enrollments/table';
+import { CreateAnnouncement } from '@/app/ui/announcements/buttons';
 import { lusitana } from '@/app/ui/fonts';
+import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
+import { fetchSubjectsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {
-  title: 'Overview',
+  title: 'Enrollments',
 };
- 
-export default async function Page() {
+
+export default async function Page({
+  searchParams
+}: {
+  searchParams: {
+    query: string,
+    page: number
+  }
+}) {
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+  const totalPages = await fetchSubjectsPages(query);
+
   return (
-    <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Enrollment
-      </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          {/* <CardWrapper /> */}
-        </Suspense>
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${lusitana.className} text-2xl`}>Enrollments</h1>
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        {/* TODO: Think of what chart to add in here */}
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          {/* <RevenueChart /> */}
-        </Suspense>
-        <Suspense fallback={<LatestInvoicesSkeleton />}>
-          {/* <LatestReports /> */}
-        </Suspense>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search subjects..." />
       </div>
-    </main>
+       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+        <Table query={query} currentPage={currentPage} />
+      </Suspense>
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </div>
   );
 }

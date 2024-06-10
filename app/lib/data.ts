@@ -4,6 +4,7 @@ import {
   Revenue,
 } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
+import { auth } from '@/auth';
 
 export async function fetchRevenue() {
   noStore();
@@ -256,10 +257,81 @@ export async function fetchStudentById(id: string) {
     const student = data.rows.map((item) => ({
       ...item,
     }));
+    
 
     return student[0];
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch student.');
+  }
+}
+
+export async function fetchStudentBySession() {
+  noStore();
+  const session = await auth();
+  if (!session?.user?.email) {
+    return null;
+  }
+  try {
+    const data = await sql`
+      SELECT
+        students.id AS student_id,
+        *
+        FROM students
+        JOIN courses ON students.course_id = courses.id
+        WHERE students.email = ${session?.user?.email};
+    `;
+
+    const student = data.rows.map((item) => ({
+      ...item,
+    }));
+
+    return student[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch student.');
+  }
+}
+
+export async function fetchFilteredSubjects(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const subjects = await sql`
+      SELECT
+        *
+      FROM subjects
+      WHERE
+        subjects.subject_title ILIKE ${`%${query}%`} OR
+        subjects.subject_description ILIKE ${`%${query}%`}
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return subjects.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch subjects.');
+  }
+}
+
+export async function fetchSubjectsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM subjects
+    WHERE
+      subjects.subject_title ILIKE ${`%${query}%`} OR
+      subjects.subject_description ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of subjects.');
   }
 }

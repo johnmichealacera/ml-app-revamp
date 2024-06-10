@@ -2,10 +2,9 @@ import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import HelpAppLogo from '@/app/ui/tec-voc-portal-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import { getUserdata, signOut } from '@/auth';
+import { signOut } from '@/auth';
 
 export default async function SideNav() {
-  const userData: any = await getUserdata();
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
