@@ -7,9 +7,10 @@ import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import {auth as auth1} from '@/auth';
  
-async function getUser(idNumber: string): Promise<User | undefined> {
+async function getUser(email: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users, students where users.student_id = students.id and students.id_number=${idNumber}`;
+    const user = await sql<User>`SELECT * FROM users where users.email=${email}`;
+
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -19,7 +20,7 @@ async function getUser(idNumber: string): Promise<User | undefined> {
 
 async function getUserByEmail(email: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users, students where users.student_id = students.id and students.email=${email}`;
+    const user = await sql<User>`SELECT * FROM users, students where users.id = students.user_id and users.email=${email}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -37,17 +38,28 @@ export async function getUserdata() {
   return session;
 }
 
+export async function getBasicUserdata() {
+  const session = await auth1();
+  
+  if (session?.user?.email) {
+    const userdata = await getUser(session?.user?.email);
+
+    return userdata;
+  }
+  return session;
+}
+
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ idNumber: z.string().min(4), password: z.string().min(6) })
+          .object({ email: z.string().min(4), password: z.string().min(6) })
           .safeParse(credentials);
         if (parsedCredentials.success) {
-          const { idNumber, password } = parsedCredentials.data;
-          const user = await getUser(idNumber);
+          const { email, password } = parsedCredentials.data;
+          const user = await getUser(email);
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) {

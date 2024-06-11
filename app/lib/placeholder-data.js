@@ -1,22 +1,39 @@
 const users = [
   {
-    student_id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    email: 'glavin617@gmail.com',
+    first_name: 'KEVIN',
+    middle_name: 'L',
+    last_name: 'DELA PEÑA',
+    suffix: '',
     password: '123456',
+    role: 'student',
   },
   {
-    student_id: '410544b2-4001-4271-9855-fec4b6a6442b',
+    id: '410544b2-4001-4271-9855-fec4b6a6442b',
+    email: 'user1@nextmail.com',
+    first_name: 'REYJON',
+    middle_name: 'P',
+    last_name: 'RAMIREZ',
+    suffix: '',
     password: '123456',
+    role: 'student',
+  },
+  {
+    id: '410544b2-4001-4271-9855-fec4b6a6442c',
+    email: 'user2@nextmail.com',
+    first_name: 'Juniper',
+    middle_name: 'P',
+    last_name: 'Banaybanay',
+    suffix: '',
+    password: '123456',
+    role: 'administrator',
   },
 ];
 
 const students = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
     id_number: '2021-0003829',
-    first_name: 'KEVIN',
-    middle_name: 'L',
-    last_name: 'DELA PEÑA',
-    suffix: '',
     gender: 'MALE',
     civil_status: 'MARRIED',
     birthday: 'SEPTEMBER 26, 1995',
@@ -25,19 +42,14 @@ const students = [
     nationality: 'FIL',
     religion: 'CHURCH OF JESUS CHRIST OF LATT',
     ethnicity: 'BISAYA',
-    email: 'glavin617@gmail.com',
     facebook: '',
     skype: '',
     zoom_account: '',
     course_id: '64ffa120-aa8a-4ab1-9396-4100342fb0f5',
+    user_id: '410544b2-4001-4271-9855-fec4b6a6442a',
   },
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442b',
     id_number: '2021-0003830',
-    first_name: 'REYJON',
-    middle_name: 'P',
-    last_name: 'RAMIREZ',
-    suffix: '',
     gender: 'MALE',
     civil_status: 'SINGLE',
     birthday: 'SEPTEMBER 19, 2000',
@@ -46,24 +58,27 @@ const students = [
     nationality: 'FIL',
     religion: '',
     ethnicity: 'BISAYA',
-    email: 'user1@nextmail.com',
     facebook: '',
     skype: '',
     zoom_account: '',
     course_id: '17c19242-7bcf-455c-b771-6b2c50371245',
+    user_id: '410544b2-4001-4271-9855-fec4b6a6442b',
   }
 ]
 
 const courses = [
   {
+    id: '64ffa120-aa8a-4ab1-9396-4100342fb0f5',
     industry_sector: 'Metals and Engineering',
     program_title: 'Shielded Metal Arc Wielding',
   },
   {
+    id: '17c19242-7bcf-455c-b771-6b2c50371245',
     industry_sector: 'Electrical and Electronics',
     program_title: 'Computer Systems Servicing',
   },
   {
+    id: '17c19242-7bcf-455c-b771-6b2c50371246',
     industry_sector: 'Social Community Development',
     program_title: 'Bookkeeping NC III',
   },

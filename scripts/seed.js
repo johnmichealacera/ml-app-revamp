@@ -14,8 +14,13 @@ async function seedUsers(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        student_id UUID REFERENCES students(id) ON DELETE CASCADE,
-        password TEXT NOT NULL
+        email VARCHAR(255),
+        first_name VARCHAR(255) NOT NULL,
+        middle_name VARCHAR(255),
+        last_name VARCHAR(255) NOT NULL,
+        suffix VARCHAR(50),
+        password TEXT NOT NULL,
+        role TEXT NOT NULL
       );
     `;
 
@@ -26,8 +31,8 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (student_id, password)
-        VALUES (${user.student_id}, ${hashedPassword})
+        INSERT INTO users (id, email, first_name, middle_name, last_name, suffix, password, role)
+        VALUES (${user.id}, ${user.email}, ${user.first_name}, ${user.middle_name}, ${user.last_name}, ${user.suffix}, ${hashedPassword}, ${user.role})
         ON CONFLICT (id) DO NOTHING;
       `;
       }),
@@ -52,11 +57,8 @@ async function seedStudents(client) {
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS students (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE,
       id_number TEXT NOT NULL UNIQUE,
-      first_name VARCHAR(255) NOT NULL,
-      middle_name VARCHAR(255),
-      last_name VARCHAR(255) NOT NULL,
-      suffix VARCHAR(50),
       gender VARCHAR(20) NOT NULL,
       civil_status VARCHAR(20) NOT NULL,
       birthday DATE NOT NULL,
@@ -65,7 +67,6 @@ async function seedStudents(client) {
       nationality VARCHAR(50),
       religion VARCHAR(50),
       ethnicity VARCHAR(50),
-      email VARCHAR(255),
       facebook VARCHAR(255),
       skype VARCHAR(255),
       zoom_account VARCHAR(255),
@@ -80,9 +81,9 @@ async function seedStudents(client) {
   const insertedStudents = await Promise.all(
     students.map(async (student) => {
       return client.sql`
-      INSERT INTO students (id, id_number, first_name, middle_name, last_name, suffix, gender, civil_status, birthday, birth_place, age, nationality, religion, ethnicity, email, facebook, skype, zoom_account, course_id)
+      INSERT INTO students (user_id, id_number, gender, civil_status, birthday, birth_place, age, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
   VALUES
-      (${student.id}, ${student.id_number}, ${student.first_name}, ${student.middle_name}, ${student.last_name}, ${student.suffix}, ${student.gender}, ${student.civil_status}, ${student.birthday}, ${student.birth_place}, ${student.age}, ${student.nationality}, ${student.religion}, ${student.ethnicity}, ${student.email}, ${student.facebook}, ${student.skype}, ${student.zoom_account}, ${student.course_id})
+      (${student.user_id}, ${student.id_number}, ${student.gender}, ${student.civil_status}, ${student.birthday}, ${student.birth_place}, ${student.age}, ${student.nationality}, ${student.religion}, ${student.ethnicity}, ${student.facebook}, ${student.skype}, ${student.zoom_account}, ${student.course_id})
       ON CONFLICT (id) DO NOTHING;
     `;
     }),
@@ -118,8 +119,8 @@ async function seedCourses(client) {
     const insertedCourses = await Promise.all(
       courses.map(async (course) => {
         return client.sql`
-        INSERT INTO courses (industry_sector, program_title)
-        VALUES (${course.industry_sector}, ${course.program_title})
+        INSERT INTO courses (id, industry_sector, program_title)
+        VALUES (${course.id}, ${course.industry_sector}, ${course.program_title})
         ON CONFLICT (id) DO NOTHING;
       `;
       }),
@@ -216,10 +217,10 @@ async function seedEnrollments(client) {
 
 async function main() {
   const client = await db.connect();
-  // await seedCourses(client);
-  // await seedSubjects(client);
-  // await seedStudents(client);
-  // await seedUsers(client);
+  await seedCourses(client);
+  await seedSubjects(client);
+  await seedUsers(client);
+  await seedStudents(client);
   await seedEnrollments(client);
 
   await client.end();

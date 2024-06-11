@@ -279,7 +279,8 @@ export async function fetchStudentBySession() {
         *
         FROM students
         JOIN courses ON students.course_id = courses.id
-        WHERE students.email = ${session?.user?.email};
+        JOIN users ON users.id = students.user_id
+        WHERE users.email = ${session?.user?.email};
     `;
 
     const student = data.rows.map((item) => ({

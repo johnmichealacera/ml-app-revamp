@@ -3,6 +3,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,12 +21,18 @@ const links = [
   },
 ];
 
-export default function NavLinks() {
+const adminLinks = [
+  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Registration', href: '/dashboard/registration', icon: PlusIcon },
+];
+
+export default function NavLinks({userdata}: {userdata: any}) {
   const pathname = usePathname();
+  const navLinks = userdata?.role === 'student' ? links : adminLinks;
 
   return (
     <>
-      {links.map((link) => {
+      {navLinks.map((link) => {
         const LinkIcon = link.icon;
         return (
           <Link
