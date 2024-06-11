@@ -251,6 +251,7 @@ export async function fetchStudentById(id: string) {
       SELECT
         *
       FROM students
+      JOIN users ON users.id = students.user_id
       WHERE students.id = ${id};
     `;
 
@@ -404,5 +405,50 @@ export async function fetchEnrolledSubjects(
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch subjects.');
+  }
+}
+
+export async function fetchStudents(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const students = await sql`
+      SELECT
+        *
+      FROM
+        students
+        JOIN users ON users.id = students.user_id
+        JOIN courses ON courses.id = students.course_id
+      WHERE
+        users.first_name ILIKE ${`%${query}%`} OR
+        users.last_name ILIKE ${`%${query}%`} OR
+        courses.program_title ILIKE ${`%${query}%`}
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
+
+    return students.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch students.');
+  }
+}
+
+export async function fetchCourses() {
+  noStore();
+  try {
+    const courses = await sql`
+      SELECT
+        *
+      FROM courses
+    `;
+
+    return courses.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch courses.');
   }
 }

@@ -23,7 +23,7 @@ const links = [
 
 const adminLinks = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  { name: 'Registration', href: '/dashboard/registration', icon: PlusIcon },
+  { name: 'Students', href: '/dashboard/registration', icon: UserGroupIcon },
 ];
 
 export default function NavLinks({userdata}: {userdata: any}) {

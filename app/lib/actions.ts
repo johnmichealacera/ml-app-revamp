@@ -170,6 +170,9 @@ export async function createUser(name: string, email:string, password: string, r
 }
 
 const StudentFormSchema = z.object({
+  courseId: z.string({
+    invalid_type_error: 'No course selected.',
+  }),
   firstName: z.string({
     invalid_type_error: 'Please enter a first name.',
   }),
@@ -205,7 +208,54 @@ const StudentFormSchema = z.object({
   }),
   email: z.string({
     invalid_type_error: 'Please enter email.',
+  }).min(6),
+  facebook: z.string({
+    invalid_type_error: 'Please enter facebook account.',
   }),
+  skype: z.string({
+    invalid_type_error: 'Please enter skype account.',
+  }),
+  zoom: z.string({
+    invalid_type_error: 'Please enter zoom account.',
+  }),
+});
+const StudentFormSchemaWithoutCourse = z.object({
+  firstName: z.string({
+    invalid_type_error: 'Please enter a first name.',
+  }),
+  middleName: z.string({
+    invalid_type_error: 'Please enter a middle name.',
+  }),
+  lastName: z.string({
+    invalid_type_error: 'Please enter a last name.',
+  }),
+  suffix: z.string({
+    invalid_type_error: 'Please enter a suffix.',
+  }),
+  gender: z.string({
+    invalid_type_error: 'Please select gender.',
+  }),
+  civilStatus: z.string({
+    invalid_type_error: 'Please enter civil status.',
+  }),
+  birthday: z.string({
+    invalid_type_error: 'Please select birthday.',
+  }),
+  birthPlace: z.string({
+    invalid_type_error: 'Please enter birth place.',
+  }),
+  nationality: z.string({
+    invalid_type_error: 'Please enter nationality.',
+  }),
+  religion: z.string({
+    invalid_type_error: 'Please enter religion.',
+  }),
+  ethnicity: z.string({
+    invalid_type_error: 'Please enter ethnicity.',
+  }),
+  email: z.string({
+    invalid_type_error: 'Please enter email.',
+  }).min(6),
   facebook: z.string({
     invalid_type_error: 'Please enter facebook account.',
   }),
@@ -217,7 +267,7 @@ const StudentFormSchema = z.object({
   }),
 });
 
-const UpdateStudent = StudentFormSchema;
+const UpdateStudent = StudentFormSchemaWithoutCourse;
 export async function updateStudent(id: string, prevState: any, formData: FormData) {
   const validatedFields = UpdateStudent.safeParse({
     firstName: formData.get('firstName'),
@@ -244,15 +294,33 @@ export async function updateStudent(id: string, prevState: any, formData: FormDa
     };
   }
   const { firstName, middleName, lastName, suffix, gender, civilStatus, birthday, birthPlace, nationality, religion, ethnicity, email, facebook, skype, zoom } = validatedFields.data;
-
     try{
-    await sql`
-      UPDATE students
-      SET first_name = ${firstName}, middle_name = ${middleName}, last_name = ${lastName}, suffix = ${suffix}, gender = ${gender}, civil_status = ${civilStatus}, birthday = ${birthday}, birth_place = ${birthPlace}, nationality = ${nationality}, religion = ${religion}, ethnicity = ${ethnicity}, email = ${email}, facebook = ${facebook}, skype = ${skype}, zoom_account = ${zoom}
-      WHERE id = ${id}
+      await sql`
+        UPDATE users
+        SET first_name = ${firstName},
+          middle_name = ${middleName},
+          last_name = ${lastName},
+          suffix = ${suffix},
+          email = ${email}
+        WHERE id = ${id};
+      `;
+      await sql`
+        UPDATE students
+        SET gender = ${gender},
+          civil_status = ${civilStatus},
+          birthday = ${birthday},
+          birth_place = ${birthPlace},
+          nationality = ${nationality},
+          religion = ${religion},
+          ethnicity = ${ethnicity},
+          facebook = ${facebook},
+          skype = ${skype},
+          zoom_account = ${zoom}
+        WHERE user_id = ${id};
     `;
-  
   } catch(error) {
+    console.error('error', error);
+    
     return { message: 'Database Error: Failed to Update Student.' };
   }
   revalidatePath('/dashboard/profile');
@@ -269,4 +337,59 @@ export async function updateEnrollment(student_id: string, subject_id: string) {
     console.error('Database Error:', error);
     throw new Error('Failed to update enrollment.');
   }
+}
+
+const CreateStudent = StudentFormSchema;
+export async function createStudent(prevState: any, formData: FormData) {
+  const validatedFields = CreateStudent.safeParse({
+    courseId: formData.get('courseId'),
+    firstName: formData.get('firstName'),
+    middleName: formData.get('middleName'),
+    lastName: formData.get('lastName'),
+    suffix: formData.get('suffix'),
+    gender: formData.get('gender'),
+    civilStatus: formData.get('civilStatus'),
+    birthday: formData.get('birthday'),
+    birthPlace: formData.get('birthPlace'),
+    age: formData.get('age'),
+    nationality: formData.get('nationality'),
+    religion: formData.get('religion'),
+    ethnicity: formData.get('ethnicity'),
+    email: formData.get('email'),
+    facebook: formData.get('facebook'),
+    skype: formData.get('skype'),
+    zoom: formData.get('zoom'),
+  });
+  if (!validatedFields.success) {
+    console.log('validatedFields.error.flatten().fieldErrors', validatedFields.error.flatten().fieldErrors);
+    
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Student.',
+    };
+  }
+  const { courseId, firstName, middleName, lastName, suffix, gender, civilStatus, birthday, birthPlace, nationality, religion, ethnicity, email, facebook, skype, zoom } = validatedFields.data;
+  const idNumber = '2024-0000001';
+
+    try{
+      const result = await sql`
+        INSERT INTO users (email, first_name, middle_name, last_name, suffix, password, role)
+        VALUES (${email}, ${firstName}, ${middleName}, ${lastName}, ${suffix}, '123456', 'student')
+        RETURNING id
+      `;
+      // Access the new user ID from the result
+      const newUser = result.rows[0];
+      await sql`
+        INSERT INTO students (user_id, id_number, gender, civil_status, birthday, birth_place, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
+        VALUES
+        (${newUser.id}, ${idNumber}, ${gender}, ${civilStatus}, ${birthday}, ${birthPlace}, ${nationality}, ${religion}, ${ethnicity}, ${facebook}, ${skype}, ${zoom}, ${courseId})
+      `;
+  
+  } catch(error) {
+    console.error('error', error);
+    
+    return { message: 'Database Error: Failed to Create Student.' };
+  }
+  revalidatePath('/dashboard/registration');
+  redirect('/dashboard/registration');
 }
