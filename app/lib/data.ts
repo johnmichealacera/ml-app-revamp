@@ -452,3 +452,99 @@ export async function fetchCourses() {
     throw new Error('Failed to fetch courses.');
   }
 }
+
+export async function fetchSubjects(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const subjects = await sql`
+      SELECT
+        *
+      FROM
+        subjects
+      WHERE
+        subjects.subject_code ILIKE ${`%${query}%`} OR
+        subjects.subject_title ILIKE ${`%${query}%`} OR
+        subjects.subject_description ILIKE ${`%${query}%`}
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
+
+    return subjects.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch subjects.');
+  }
+}
+
+export async function fetchFilteredInstructors(query: string, 
+  currentPage: number) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  try {
+    const data = await sql`
+		SELECT
+		  *
+		FROM instructors
+		WHERE
+      instructors.first_name ILIKE ${`%${query}%`} OR
+      instructors.last_name ILIKE ${`%${query}%`}
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+	  `;
+
+    return data?.rows;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch instructors table.');
+  }
+}
+
+export async function fetchInstructorById(id: string) {
+  noStore();
+  try {
+    const data = await sql`
+      SELECT
+        *
+      FROM instructors
+      WHERE instructors.id = ${id};
+    `;
+
+    const instructor = data.rows.map((item) => ({
+      ...item,
+    }));
+
+    return instructor[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch instructor.');
+  }
+}
+
+export async function fetchCoursesWithQuery(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const courses = await sql`
+      SELECT
+        *
+      FROM
+        courses
+      WHERE
+        courses.industry_sector ILIKE ${`%${query}%`} OR
+        courses.program_title ILIKE ${`%${query}%`}
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
+
+    return courses.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch courses.');
+  }
+}

@@ -12,6 +12,7 @@ export default function Form({courses}: {courses: any}) {
   const initialState = { message: null, errors: {} };
   const createStudentData = createStudent.bind(null);
   const [state, dispatch] = useFormState(createStudentData, initialState);
+  console.log('courses', courses);
   
   return (
     <form action={dispatch}>

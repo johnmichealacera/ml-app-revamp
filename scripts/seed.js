@@ -55,6 +55,8 @@ async function seedStudents(client) {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
     const createTable = await client.sql`
+    CREATE SEQUENCE IF NOT EXISTS id_number_seq START 1;
+
     CREATE TABLE IF NOT EXISTS students (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       user_id UUID REFERENCES users(id) ON DELETE CASCADE,
@@ -71,7 +73,20 @@ async function seedStudents(client) {
       skype VARCHAR(255),
       zoom_account VARCHAR(255),
       course_id UUID REFERENCES courses(id) ON DELETE CASCADE
-  );
+    );
+
+    CREATE OR REPLACE FUNCTION generate_id_number()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.id_number := to_char(current_date, 'YYYY') || '-' || lpad(nextval('id_number_seq')::text, 5, '0');
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER set_id_number
+    BEFORE INSERT ON students
+    FOR EACH ROW
+    EXECUTE FUNCTION generate_id_number();
   `;
 
   console.log(`Created "students" table`);
@@ -81,9 +96,9 @@ async function seedStudents(client) {
   const insertedStudents = await Promise.all(
     students.map(async (student) => {
       return client.sql`
-      INSERT INTO students (user_id, id_number, gender, civil_status, birthday, birth_place, age, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
+      INSERT INTO students (user_id, gender, civil_status, birthday, birth_place, age, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
   VALUES
-      (${student.user_id}, ${student.id_number}, ${student.gender}, ${student.civil_status}, ${student.birthday}, ${student.birth_place}, ${student.age}, ${student.nationality}, ${student.religion}, ${student.ethnicity}, ${student.facebook}, ${student.skype}, ${student.zoom_account}, ${student.course_id})
+      (${student.user_id}, ${student.gender}, ${student.civil_status}, ${student.birthday}, ${student.birth_place}, ${student.age}, ${student.nationality}, ${student.religion}, ${student.ethnicity}, ${student.facebook}, ${student.skype}, ${student.zoom_account}, ${student.course_id})
       ON CONFLICT (id) DO NOTHING;
     `;
     }),
@@ -185,43 +200,66 @@ async function seedEnrollments(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         student_id UUID REFERENCES students(id) ON DELETE CASCADE,
         subject_id UUID REFERENCES subjects(id) ON DELETE CASCADE,
+        school_year_id UUID REFERENCES school_year(id) ON DELETE CASCADE,
         enrollment_date DATE DEFAULT CURRENT_DATE,
         grade NUMERIC(5, 2)
       );
     `;
 
     console.log(`Created "enrollments" table`);
-
-    // Insert data into the "enrollments" table
-    // const insertedEnrollments = await Promise.all(
-    //   enrollments.map(async (enrollment) => {
-    //     return client.sql`
-    //     INSERT INTO enrollments (student_id, course_id, grade)
-    //     VALUES (${enrollment.student_id}, ${enrollment.course_id}, ${enrollment.grade})
-    //     ON CONFLICT (id) DO NOTHING;
-    //   `;
-    //   }),
-    // );
-
-    // console.log(`Seeded ${insertedEnrollments.length} enrollments`);
-
-    // return {
-    //   createTable,
-    //   enrollments: insertedEnrollments,
-    // };
   } catch (error) {
     console.error('Error seeding enrollment:', error);
     throw error;
   }
 }
 
+async function seedSchoolYear(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "school_year" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS school_year (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        semester TEXT NOT NULL,
+        year INT NOT NULL
+      );
+    `;
+
+    console.log(`Created "school_year" table`);
+  } catch (error) {
+    console.error('Error seeding school year:', error);
+    throw error;
+  }
+}
+
+async function seedInstructors(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "instructors" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS instructors (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL
+      );
+    `;
+
+    console.log(`Created "instructors" table`);
+  } catch (error) {
+    console.error('Error seeding instructors:', error);
+    throw error;
+  }
+}
+
 async function main() {
   const client = await db.connect();
-  await seedCourses(client);
-  await seedSubjects(client);
-  await seedUsers(client);
-  await seedStudents(client);
-  await seedEnrollments(client);
+  // await seedCourses(client);
+  // await seedSubjects(client);
+  // await seedUsers(client);
+  // await seedStudents(client);
+  // await seedEnrollments(client);
+  // await seedSchoolYear(client);
+  await seedInstructors(client);
 
   await client.end();
 }

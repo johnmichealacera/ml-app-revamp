@@ -341,6 +341,7 @@ export async function updateEnrollment(student_id: string, subject_id: string) {
 
 const CreateStudent = StudentFormSchema;
 export async function createStudent(prevState: any, formData: FormData) {
+  
   const validatedFields = CreateStudent.safeParse({
     courseId: formData.get('courseId'),
     firstName: formData.get('firstName'),
@@ -361,35 +362,105 @@ export async function createStudent(prevState: any, formData: FormData) {
     zoom: formData.get('zoom'),
   });
   if (!validatedFields.success) {
-    console.log('validatedFields.error.flatten().fieldErrors', validatedFields.error.flatten().fieldErrors);
-    
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Student.',
     };
   }
   const { courseId, firstName, middleName, lastName, suffix, gender, civilStatus, birthday, birthPlace, nationality, religion, ethnicity, email, facebook, skype, zoom } = validatedFields.data;
-  const idNumber = '2024-0000001';
 
-    try{
-      const result = await sql`
-        INSERT INTO users (email, first_name, middle_name, last_name, suffix, password, role)
-        VALUES (${email}, ${firstName}, ${middleName}, ${lastName}, ${suffix}, '123456', 'student')
-        RETURNING id
-      `;
-      // Access the new user ID from the result
-      const newUser = result.rows[0];
-      await sql`
-        INSERT INTO students (user_id, id_number, gender, civil_status, birthday, birth_place, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
-        VALUES
-        (${newUser.id}, ${idNumber}, ${gender}, ${civilStatus}, ${birthday}, ${birthPlace}, ${nationality}, ${religion}, ${ethnicity}, ${facebook}, ${skype}, ${zoom}, ${courseId})
-      `;
-  
-  } catch(error) {
+  try {
+    const hashedPassword = await bcrypt.hash('123456', 10);
+    const result = await sql`
+      INSERT INTO users (email, first_name, middle_name, last_name, suffix, password, role)
+      VALUES (${email}, ${firstName}, ${middleName}, ${lastName}, ${suffix}, ${hashedPassword}, 'student')
+      RETURNING id
+    `;
+    // Access the new user ID from the result
+    const newUser = result.rows[0];
+
+    // Confirm that the user is in the database
+    const confirmedUser = await sql`
+      SELECT id FROM users WHERE id = ${newUser.id}
+    `;
+
+    if (confirmedUser.rowCount === 0) {
+      throw new Error('User insertion failed');
+    }
+
+    await sql`
+      INSERT INTO students (user_id, gender, civil_status, birthday, birth_place, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
+      VALUES
+      (${newUser.id}, ${gender}, ${civilStatus}, ${birthday}, ${birthPlace}, ${nationality}, ${religion}, ${ethnicity}, ${facebook}, ${skype}, ${zoom}, ${courseId})
+    `;
+  } catch (error) {
     console.error('error', error);
-    
     return { message: 'Database Error: Failed to Create Student.' };
   }
   revalidatePath('/dashboard/registration');
   redirect('/dashboard/registration');
+}
+
+const InstructorFormSchema = z.object({
+  firstName: z.string({
+    invalid_type_error: 'Please enter a first name.',
+  }),
+  lastName: z.string({
+    invalid_type_error: 'Please enter a last name.',
+  }),
+});
+
+const CreateInstructor = InstructorFormSchema;
+export async function createInstructor(prevState: any, formData: FormData) {
+  
+  const validatedFields = CreateInstructor.safeParse({
+    firstName: formData.get('firstName'),
+    lastName: formData.get('lastName'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Instructor.',
+    };
+  }
+  const { firstName, lastName } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO instructors (first_name, last_name)
+      VALUES (${firstName}, ${lastName})
+    `;
+  } catch (error) {
+    console.error('error', error);
+    return { message: 'Database Error: Failed to Create Instructor.' };
+  }
+  revalidatePath('/dashboard/instructors');
+  redirect('/dashboard/instructors');
+}
+
+const UpdateInstructor = InstructorFormSchema;
+export async function updateInstructor(id: string, prevState: any, formData: FormData) {
+  const validatedFields = UpdateInstructor.safeParse({
+    firstName: formData.get('firstName'),
+    lastName: formData.get('lastName'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Announcement.',
+    };
+  }
+  const { firstName, lastName } = validatedFields.data;
+  try{
+    await sql`
+      UPDATE instructors
+      SET first_name = ${firstName}, last_name = ${lastName}
+      WHERE id = ${id}
+    `;
+  
+  } catch(error) {
+    return { message: 'Database Error: Failed to Update Instructor.' };
+  }
+  revalidatePath('/dashboard/instructors');
+  redirect('/dashboard/instructors');
 }
