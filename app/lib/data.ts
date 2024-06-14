@@ -306,32 +306,20 @@ export async function fetchUnEnrolledSubjects(
   try {
     const subjects = await sql`
     SELECT
-    subjects.*
-FROM
-    subjects
-LEFT JOIN
-    enrollments ON subjects.id = enrollments.subject_id AND enrollments.student_id = (
+      subjects.*
+    FROM
+      subjects
+    LEFT JOIN
+      enrollments ON subjects.id = enrollments.subject_id AND enrollments.student_id = (
         SELECT id FROM students WHERE id_number = ${idNumber}
-    )
-WHERE
-    enrollments.subject_id IS NULL
-AND 
-    (subjects.subject_title ILIKE ${`%${query}%`} OR
-     subjects.subject_description ILIKE ${`%${query}%`})
-LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
-`;
-    // const subjects = await sql`
-    //   SELECT
-    //     *
-    //   FROM students
-    //   JOIN enrollments ON enrollments.student_id = students.id
-    //   JOIN subjects ON subjects.id = enrollments.subject_id
-    //   WHERE
-    //     students.id_number = ${idNumber} AND
-    //     (subjects.subject_title ILIKE ${`%${query}%`} OR
-    //     subjects.subject_description ILIKE ${`%${query}%`})
-    //   LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    // `;
+      )
+    WHERE
+      enrollments.subject_id IS NULL
+    AND 
+      (subjects.subject_title ILIKE ${`%${query}%`} OR
+      subjects.subject_description ILIKE ${`%${query}%`})
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
 
     return subjects.rows;
   } catch (error) {
@@ -559,15 +547,19 @@ export async function fetchFilteredInternships(
   try {
     const subjects = await sql`
       SELECT
-        *
+        *,
+        internships.id as id,
+        courses.id as course_id
       FROM
         internships
+      JOIN courses ON courses.id = internships.course_id
       WHERE
         internships.title ILIKE ${`%${query}%`} OR
         internships.company_name ILIKE ${`%${query}%`} OR
         internships.location ILIKE ${`%${query}%`} OR
         internships.contact_information ILIKE ${`%${query}%`} OR
-        internships.application_status ILIKE ${`%${query}%`}
+        internships.application_status ILIKE ${`%${query}%`} OR
+        courses.program_title ILIKE ${`%${query}%`}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
     `;
 
@@ -597,5 +589,26 @@ export async function fetchInternshipsPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of internships.');
+  }
+}
+
+export async function fetchInternshipById(id: string) {
+  noStore();
+  try {
+    const data = await sql`
+      SELECT
+        *
+      FROM internships
+      WHERE internships.id = ${id};
+    `;
+
+    const internship = data.rows.map((item) => ({
+      ...item,
+    }));
+
+    return internship[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch internship.');
   }
 }

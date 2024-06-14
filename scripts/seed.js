@@ -258,6 +258,7 @@ async function seedInternships(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS internships (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
         title TEXT NOT NULL,
         company_name TEXT NOT NULL,
         location TEXT NOT NULL,

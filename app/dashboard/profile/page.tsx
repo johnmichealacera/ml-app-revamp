@@ -2,7 +2,6 @@ import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
 import { CardsSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
-import { getUserdata } from '@/auth';
 import { formatDateToLocal } from '@/app/lib/utils';
 import Link from 'next/link';
 import { fetchStudentBySession } from '@/app/lib/data';

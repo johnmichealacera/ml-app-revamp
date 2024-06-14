@@ -14,7 +14,7 @@ export default async function TecVocPortalLogo() {
         className="h-12 w-12 md:h-16 md:w-16"
         alt="BGFC logo"
       />
-      <p className="text-[32px]">TecVoc Portal</p>
+      <p className="text-[40px]">TecVoc Portal</p>
     </div>
   );
 }

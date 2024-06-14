@@ -1,35 +1,33 @@
 'use client';
 import {
   UserGroupIcon,
-  HomeIcon,
   DocumentDuplicateIcon,
-  PlusIcon,
   BriefcaseIcon,
   UsersIcon,
-  CalendarIcon,
+  DocumentIcon,
+  InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Enrollment', href: '/dashboard/enrollment', icon: UserGroupIcon },
+  { name: 'Enrollment', href: '#', icon: UserGroupIcon },
   {
     name: 'Classes',
-    href: '/dashboard/classes',
+    href: '#',
     icon: DocumentDuplicateIcon,
   },
+  { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
 ];
 
 const adminLinks = [
   { name: 'Students', href: '/dashboard/registration', icon: UserGroupIcon },
   { name: 'Instructors', href: '/dashboard/instructors', icon: UsersIcon },
   { name: 'Courses', href: '/dashboard/courses', icon: BriefcaseIcon },
-  { name: 'Subjects', href: '/dashboard/subjects', icon: BriefcaseIcon },
-  { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
-  { name: 'School Year', href: '#', icon: CalendarIcon },
+  { name: 'Subjects', href: '/dashboard/subjects', icon: DocumentIcon },
+  { name: 'Internship', href: '/dashboard/internship', icon: InformationCircleIcon },
+  // { name: 'School Year', href: '#', icon: CalendarIcon },
 ];
 
 export default function NavLinks({userdata}: {userdata: any}) {

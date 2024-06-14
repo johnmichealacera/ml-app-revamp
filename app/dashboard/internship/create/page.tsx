@@ -1,3 +1,4 @@
+import { fetchCourses } from '@/app/lib/data';
 import Form from '@/app/ui/internship/register-form';
 import Breadcrumbs from '@/app/ui/registration/breadcrumbs';
 import { Metadata } from 'next';
@@ -7,7 +8,8 @@ export const metadata: Metadata = {
 };
  
 export default async function Page() {
- 
+  const courses = await fetchCourses();
+  
   return (
     <main>
       <Breadcrumbs
@@ -20,7 +22,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form />
+      <Form courses={courses}/>
     </main>
   );
 }

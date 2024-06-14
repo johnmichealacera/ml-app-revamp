@@ -1,9 +1,12 @@
+import { UpdateInternship } from "./buttons";
+
 export default async function RegistrationTable({
   internship,
+  isUserAdmin,
 }: {
-  internship: any[];
+  internship: any[],
+  isUserAdmin: boolean,
 }) {
-
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -16,13 +19,14 @@ export default async function RegistrationTable({
               >
                 <div className="flex flex-col w-full md:flex-row md:items-center md:justify-between md:pt-4">
                   <div className="md:w-1/2">
+                    <p className="text-lg font-medium">{item.program_title}</p>
                     <p className="text-lg font-medium">{item.title}</p>
                     <p className="text-lg font-medium">{item.company_name}</p>
                     <p className="text-sm md:text-base">{item.location}</p>
                     <p className="text-sm md:text-base">{item.application_status}</p>
                   </div>
                   <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    {/* <EnrollSubject id={subject.id} studentId={userdata?.student_id}/> */}
+                    {isUserAdmin && <UpdateInternship id={item.id}/>}
                   </div>
                 </div>
               </div>
@@ -31,6 +35,9 @@ export default async function RegistrationTable({
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Course
+                </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Title
                 </th>
@@ -55,6 +62,9 @@ export default async function RegistrationTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
+                    <div className="truncate">{`${item.program_title} `}</div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3 max-w-xs">
                     <div className="truncate">{`${item.title} `}</div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
@@ -67,9 +77,9 @@ export default async function RegistrationTable({
                     <div className="truncate">{item.application_status}</div>
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      {/* <EnrollSubject id={subject.id} studentId={userdata?.student_id}/> */}
-                    </div>
+                  <div className="flex justify-end gap-3">
+                    {isUserAdmin && <UpdateInternship id={item.id}/>}
+                  </div>
                   </td>
                 </tr>
               ))}
