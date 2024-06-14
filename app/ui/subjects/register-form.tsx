@@ -12,8 +12,6 @@ export default function Form({courses}: {courses: any}) {
   const initialState = { message: null, errors: {} };
   const createStudentData = createStudent.bind(null);
   const [state, dispatch] = useFormState(createStudentData, initialState);
-  console.log('courses', courses);
-  
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6" aria-describedby="form-error">

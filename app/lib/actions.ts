@@ -464,3 +464,50 @@ export async function updateInstructor(id: string, prevState: any, formData: For
   revalidatePath('/dashboard/instructors');
   redirect('/dashboard/instructors');
 }
+
+const InternshipFormSchema = z.object({
+  title: z.string({
+    invalid_type_error: 'Please enter a title.',
+  }),
+  companyName: z.string({
+    invalid_type_error: 'Please enter company name.',
+  }),
+  location: z.string({
+    invalid_type_error: 'Please enter location.',
+  }),
+  contactInformation: z.string({
+    invalid_type_error: 'Please enter contact information.',
+  }),
+  internshipStatus: z.string({
+    invalid_type_error: 'Please select application status.',
+  }),
+});
+const CreateInternship = InternshipFormSchema;
+export async function createInternship(prevState: any, formData: FormData) {
+  const validatedFields = CreateInternship.safeParse({
+    title: formData.get('title'),
+    companyName: formData.get('companyName'),
+    location: formData.get('location'),
+    contactInformation: formData.get('contactInformation'),
+    internshipStatus: formData.get('internshipStatus'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Internship.',
+    };
+  }
+  const { title, companyName, location, contactInformation, internshipStatus } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO internships (title, company_name, location, contact_information, application_status)
+      VALUES (${title}, ${companyName}, ${location}, ${contactInformation}, ${internshipStatus})
+    `;
+  } catch (error) {
+    console.error('error', error);
+    return { message: 'Database Error: Failed to Create Internship.' };
+  }
+  revalidatePath('/dashboard/internship');
+  redirect('/dashboard/internship');
+}

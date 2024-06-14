@@ -28,6 +28,7 @@ const adminLinks = [
   { name: 'Instructors', href: '/dashboard/instructors', icon: UsersIcon },
   { name: 'Courses', href: '/dashboard/courses', icon: BriefcaseIcon },
   { name: 'Subjects', href: '/dashboard/subjects', icon: BriefcaseIcon },
+  { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
   { name: 'School Year', href: '#', icon: CalendarIcon },
 ];
 

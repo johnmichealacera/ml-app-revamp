@@ -548,3 +548,54 @@ export async function fetchCoursesWithQuery(
     throw new Error('Failed to fetch courses.');
   }
 }
+
+export async function fetchFilteredInternships(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const subjects = await sql`
+      SELECT
+        *
+      FROM
+        internships
+      WHERE
+        internships.title ILIKE ${`%${query}%`} OR
+        internships.company_name ILIKE ${`%${query}%`} OR
+        internships.location ILIKE ${`%${query}%`} OR
+        internships.contact_information ILIKE ${`%${query}%`} OR
+        internships.application_status ILIKE ${`%${query}%`}
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
+
+    return subjects.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch subjects.');
+  }
+}
+
+export async function fetchInternshipsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM
+      internships
+    WHERE
+      internships.title ILIKE ${`%${query}%`} OR
+      internships.company_name ILIKE ${`%${query}%`} OR
+      internships.location ILIKE ${`%${query}%`} OR
+      internships.contact_information ILIKE ${`%${query}%`} OR
+      internships.application_status ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of internships.');
+  }
+}

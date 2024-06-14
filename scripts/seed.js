@@ -251,6 +251,28 @@ async function seedInstructors(client) {
   }
 }
 
+async function seedInternships(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "internships" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS internships (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        title TEXT NOT NULL,
+        company_name TEXT NOT NULL,
+        location TEXT NOT NULL,
+        contact_information TEXT NOT NULL,
+        application_status TEXT NOT NULL
+      );
+    `;
+
+    console.log(`Created "internships" table`);
+  } catch (error) {
+    console.error('Error seeding internships:', error);
+    throw error;
+  }
+}
+
 async function main() {
   const client = await db.connect();
   // await seedCourses(client);
@@ -259,7 +281,8 @@ async function main() {
   // await seedStudents(client);
   // await seedEnrollments(client);
   // await seedSchoolYear(client);
-  await seedInstructors(client);
+  // await seedInstructors(client);
+  await seedInternships(client);
 
   await client.end();
 }
