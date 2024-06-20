@@ -4,7 +4,7 @@ import { RegisterStudent } from '@/app/ui/classes/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchSubjectsPages } from '@/app/lib/data';
+import { fetchStudentsPages, fetchSubjectsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import Table from '@/app/ui/registration/table';
  
@@ -22,7 +22,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchSubjectsPages(query);
+  const totalPages = await fetchStudentsPages(query);
 
   return (
     <div className="w-full">

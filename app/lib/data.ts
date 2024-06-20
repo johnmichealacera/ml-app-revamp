@@ -123,6 +123,63 @@ export async function fetchSubjectsPages(query: string) {
   }
 }
 
+export async function fetchCoursesPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM courses
+    WHERE
+      courses.industry_sector ILIKE ${`%${query}%`} OR
+      courses.program_title ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of courses.');
+  }
+}
+
+export async function fetchStudentsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM users
+    JOIN students ON students.user_id = users.id
+    JOIN courses ON courses.id = students.course_id
+    WHERE
+      users.first_name ILIKE ${`%${query}%`} OR
+      users.last_name ILIKE ${`%${query}%`} OR
+      courses.program_title ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of students.');
+  }
+}
+
+export async function fetchInstructorsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM instructors
+    WHERE
+      instructors.first_name ILIKE ${`%${query}%`} OR
+      instructors.last_name ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of instructors.');
+  }
+}
+
 export async function fetchClassesPages(idNumber: string, query: string) {
   noStore();
   try {

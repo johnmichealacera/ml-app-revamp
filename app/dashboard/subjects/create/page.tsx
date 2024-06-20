@@ -1,5 +1,5 @@
 import Breadcrumbs from '@/app/ui/classes/breadcrumbs';
-import Form from '@/app/ui/courses/create-form';
+import Form from '@/app/ui/subjects/create-form';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {
@@ -12,10 +12,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Courses', href: '/dashboard/courses' },
+          { label: 'Subjects', href: '/dashboard/subjects' },
           {
-            label: 'Create Course',
-            href: '/dashboard/announcements/create',
+            label: 'Create Subject',
+            href: '/dashboard/subjects/create',
             active: true,
           },
         ]}

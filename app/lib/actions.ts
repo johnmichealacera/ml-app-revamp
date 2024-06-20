@@ -473,3 +473,77 @@ export async function updateInternship(id: string, prevState: any, formData: For
   revalidatePath('/dashboard/internship');
   redirect('/dashboard/internship');
 }
+
+const CourseFormSchema = z.object({
+  industrySector: z.string({
+    invalid_type_error: 'Please enter industry sector.',
+  }),
+  programTitle: z.string({
+    invalid_type_error: 'Please enter program title.',
+  }),
+});
+const CreateCourse = CourseFormSchema;
+export async function createCourse(prevState: any, formData: FormData) {
+  const validatedFields = CreateCourse.safeParse({
+    industrySector: formData.get('industrySector'),
+    programTitle: formData.get('programTitle'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Course.',
+    };
+  }
+  const { industrySector, programTitle } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO courses (industry_sector, program_title)
+      VALUES (${industrySector}, ${programTitle})
+    `;
+  } catch (error) {
+    console.error('error', error);
+    return { message: 'Database Error: Failed to Create Course.' };
+  }
+  revalidatePath('/dashboard/courses');
+  redirect('/dashboard/courses');
+}
+
+const SubjectFormSchema = z.object({
+  subjectCode: z.string({
+    invalid_type_error: 'Please enter subject code.',
+  }),
+  subjectTitle: z.string({
+    invalid_type_error: 'Please enter subject title.',
+  }),
+  subjectDescription: z.string({
+    invalid_type_error: 'Please enter program description.',
+  }),
+});
+const CreateSubject = SubjectFormSchema;
+export async function createSubject(prevState: any, formData: FormData) {
+  const validatedFields = CreateSubject.safeParse({
+    subjectCode: formData.get('subjectCode'),
+    subjectTitle: formData.get('subjectTitle'),
+    subjectDescription: formData.get('subjectDescription'),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Subject.',
+    };
+  }
+  const { subjectCode, subjectTitle, subjectDescription } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO subjects (subject_code, subject_title, subject_description)
+      VALUES (${subjectCode}, ${subjectTitle}, ${subjectDescription})
+    `;
+  } catch (error) {
+    console.error('error', error);
+    return { message: 'Database Error: Failed to Create Subject.' };
+  }
+  revalidatePath('/dashboard/subjects');
+  redirect('/dashboard/subjects');
+}

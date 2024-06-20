@@ -1,7 +1,8 @@
-import { fetchFilteredInstructors } from '@/app/lib/data';
+import { fetchFilteredInstructors, fetchInstructorsPages } from '@/app/lib/data';
 import { CreateInstructor } from '@/app/ui/classes/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import Table from '@/app/ui/instructors/table';
+import Pagination from '@/app/ui/pagination';
 import Search from '@/app/ui/search';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { getBasicUserdata } from '@/auth';
@@ -23,6 +24,7 @@ export default async function Page({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const instructors: any = await fetchFilteredInstructors(query, currentPage);
+  const totalPages = await fetchInstructorsPages(query);
   const userdata: any = await getBasicUserdata();
   const isUserAdmin = userdata?.role === 'administrator';
 
@@ -39,7 +41,7 @@ export default async function Page({
         <Table instructors={instructors} isUserAdmin={isUserAdmin}/>
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
-        {/* <Pagination totalPages={totalPages} /> */}
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );
