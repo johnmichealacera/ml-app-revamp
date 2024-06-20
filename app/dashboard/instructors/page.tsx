@@ -1,8 +1,7 @@
-import { fetchFilteredInstructors, fetchFilteredReports, fetchReportsPages } from '@/app/lib/data';
+import { fetchFilteredInstructors } from '@/app/lib/data';
 import { CreateInstructor } from '@/app/ui/classes/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import Table from '@/app/ui/instructors/table';
-import Pagination from '@/app/ui/pagination';
 import Search from '@/app/ui/search';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { getBasicUserdata } from '@/auth';

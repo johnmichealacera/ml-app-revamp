@@ -1,6 +1,5 @@
-import { fetchFilteredReports, fetchReportsPages, fetchSubjects, fetchSubjectsPages } from '@/app/lib/data';
+import { fetchSubjects, fetchSubjectsPages } from '@/app/lib/data';
 import { lusitana } from '@/app/ui/fonts';
-import Pagination from '@/app/ui/pagination';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import Table from '@/app/ui/subjects/table';
 import { Metadata } from 'next';

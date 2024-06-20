@@ -1,5 +1,4 @@
-import { fetchStudents, fetchUnEnrolledSubjects } from '@/app/lib/data';
-import { getUserdata } from '@/auth';
+import { fetchStudents } from '@/app/lib/data';
 
 export default async function RegistrationTable({
   query,
@@ -24,10 +23,6 @@ export default async function RegistrationTable({
                   <div className="md:w-1/2">
                     <p className="text-lg font-medium">{`${student.first_name} ${student.middle_name} ${student.last_name}`}</p>
                     <p className="text-lg font-medium">{student.program_title}</p>
-                    <p className="text-sm md:text-base">{student.subject_description}</p>
-                  </div>
-                  <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    {/* <EnrollSubject id={subject.id} studentId={userdata?.student_id}/> */}
                   </div>
                 </div>
               </div>
@@ -42,12 +37,6 @@ export default async function RegistrationTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Course
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Description
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -61,14 +50,6 @@ export default async function RegistrationTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
                     <div className="truncate">{student.program_title}</div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3 max-w-xs">
-                    <div className="truncate">{student.subject_description}</div>
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      {/* <EnrollSubject id={subject.id} studentId={userdata?.student_id}/> */}
-                    </div>
                   </td>
                 </tr>
               ))}

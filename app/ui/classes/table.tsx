@@ -1,6 +1,3 @@
-import Image from 'next/image';
-import { UpdateAnnouncement, DeleteAnnouncement } from '@/app/ui/classes/buttons';
-import { formatDateToLocal } from '@/app/lib/utils';
 import { fetchEnrolledSubjects } from '@/app/lib/data';
 
 export default async function ClassesTable({
@@ -29,17 +26,13 @@ export default async function ClassesTable({
                     <div className="mb-2 flex items-center">
                       <p>{item.subject_code}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{item.department}</p>
+                    <p className="text-sm text-gray-500">{item.subject_title}</p>
                   </div>
                 </div>
                 <div className="flex flex-col w-full md:flex-row md:items-center md:justify-between md:pt-4">
                   <div className="md:w-1/2">
-                    <p className="text-lg font-medium">{item.subject}</p>
-                    <p className="text-sm md:text-base">{item.description}</p>
-                  </div>
-                  <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    <UpdateAnnouncement id={item.id} />
-                    <DeleteAnnouncement id={item.id} />
+                    <p className="text-lg font-medium">{item.subject_title}</p>
+                    <p className="text-sm md:text-base">{item.subject_description}</p>
                   </div>
                 </div>
               </div>
@@ -56,9 +49,6 @@ export default async function ClassesTable({
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Description
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
                 </th>
               </tr>
             </thead>
@@ -78,12 +68,6 @@ export default async function ClassesTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
                     <div className="truncate">{item.subject_description}</div>
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      {/* <UpdateAnnouncement id={item.id} />
-                      <DeleteAnnouncement id={item.id} /> */}
-                    </div>
                   </td>
                 </tr>
               ))}

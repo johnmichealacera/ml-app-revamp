@@ -4,7 +4,7 @@ import Table from '@/app/ui/classes/table';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchAnnouncementsPages, fetchClassesPages } from '@/app/lib/data';
+import { fetchClassesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { getUserdata } from '@/auth';
  
