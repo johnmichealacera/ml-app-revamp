@@ -2,7 +2,7 @@ import { KeyIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { createUser } from '../lib/actions';
 
-export function SignUpModal({ isOpen, onClose }) {
+export function SignUpModal({ isOpen, onClose }: { isOpen: any, onClose: any }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +10,7 @@ export function SignUpModal({ isOpen, onClose }) {
   const [role, setRole] = useState('');
   const [passwordsMatch, setPasswordsMatch] = useState(true); // State to track if passwords match
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     // Handle form submission logic here
     // Check if passwords match
