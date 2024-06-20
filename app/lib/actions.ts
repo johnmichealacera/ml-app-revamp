@@ -67,6 +67,51 @@ export async function createAnnouncement(prevState: State, formData: FormData) {
   redirect('/dashboard/announcements');
 }
 
+const ChangePasswordFormSchema = z.object({
+  password: z.string({
+    invalid_type_error: 'Please enter password.',
+  }),
+  confirmPassword: z.string({
+    invalid_type_error: 'Please confirm password.',
+  }),
+});
+
+const ChangePassword = ChangePasswordFormSchema;
+export async function changePassword(userId: string, prevState: any, formData: FormData) {
+  const userdata: any = await getUserdata();
+  const validatedFields = ChangePassword.safeParse({
+    password: formData.get('password'),
+    confirmPassword: formData.get('confirmPassword'),
+  });
+  
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Change Password.',
+    };
+  }
+  // Prepare data for insertion into the database
+  const { password, confirmPassword } = validatedFields.data;
+  if (password !== confirmPassword) {
+    return {
+      errors: 'Password do not match',
+      message: 'Password does not match. Failed to change password.',
+    };
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    await sql`
+      UPDATE users SET password = ${hashedPassword} where id=${userId}
+    `;
+
+  } catch(error) {
+    return { message: 'Database Error: Failed to Update Password.' };
+  }
+  revalidatePath('/dashboard/internship');
+  redirect('/dashboard/internship');
+}
+
 const UpdateAnnouncement = HelpAppFormSchema.omit({ id: true, date: true });
 export async function updateAnnouncement(id: string, prevState: State, formData: FormData) {
   const userdata: any = await getUserdata();

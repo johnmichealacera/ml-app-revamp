@@ -200,9 +200,7 @@ async function seedEnrollments(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         student_id UUID REFERENCES students(id) ON DELETE CASCADE,
         subject_id UUID REFERENCES subjects(id) ON DELETE CASCADE,
-        school_year_id UUID REFERENCES school_year(id) ON DELETE CASCADE,
-        enrollment_date DATE DEFAULT CURRENT_DATE,
-        grade NUMERIC(5, 2)
+        enrollment_date DATE DEFAULT CURRENT_DATE
       );
     `;
 
@@ -280,10 +278,10 @@ async function main() {
   // await seedSubjects(client);
   // await seedUsers(client);
   // await seedStudents(client);
-  // await seedEnrollments(client);
+  await seedEnrollments(client);
   // await seedSchoolYear(client);
   // await seedInstructors(client);
-  await seedInternships(client);
+  // await seedInternships(client);
 
   await client.end();
 }

@@ -5,6 +5,7 @@ import Table from '@/app/ui/instructors/table';
 import Pagination from '@/app/ui/pagination';
 import Search from '@/app/ui/search';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
+import { getBasicUserdata } from '@/auth';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
  
@@ -22,8 +23,9 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  // const totalPages = await fetchReportsPages(query);
   const instructors: any = await fetchFilteredInstructors(query, currentPage);
+  const userdata: any = await getBasicUserdata();
+  const isUserAdmin = userdata?.role === 'administrator';
 
   return (
     <div className="w-full">
@@ -32,10 +34,10 @@ export default async function Page({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search instructors..." />
-        <CreateInstructor />
+        {isUserAdmin && <CreateInstructor />}
       </div>
        <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table instructors={instructors} />
+        <Table instructors={instructors} isUserAdmin={isUserAdmin}/>
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         {/* <Pagination totalPages={totalPages} /> */}

@@ -29,7 +29,7 @@ export default async function EnrollmentsTable({
                     <p className="text-sm md:text-base">{subject.subject_description}</p>
                   </div>
                   <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    <EnrollSubject id={subject.id} studentId={userdata?.student_id}/>
+                    <EnrollSubject id={subject.id} studentId={userdata?.id}/>
                   </div>
                 </div>
               </div>
@@ -69,7 +69,7 @@ export default async function EnrollmentsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <EnrollSubject id={subject.id} studentId={userdata?.student_id}/>
+                      <EnrollSubject id={subject.id} studentId={userdata?.id}/>
                     </div>
                   </td>
                 </tr>

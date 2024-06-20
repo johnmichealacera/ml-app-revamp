@@ -2,8 +2,10 @@ import { UpdateInstructor } from "./buttons";
 
 export default async function RegistrationTable({
   instructors,
+  isUserAdmin,
 }: {
   instructors: any[];
+  isUserAdmin: boolean,
 }) {
 
   return (
@@ -22,7 +24,7 @@ export default async function RegistrationTable({
                     <p className="text-lg font-medium">{instructor.last_name}</p>
                   </div>
                   <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
-                    <UpdateInstructor id={instructor.id}/>
+                    {isUserAdmin && <UpdateInstructor id={instructor.id}/>}
                   </div>
                 </div>
               </div>
@@ -56,7 +58,7 @@ export default async function RegistrationTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInstructor id={instructor.id}/>
+                      {isUserAdmin && <UpdateInstructor id={instructor.id}/>}
                     </div>
                   </td>
                 </tr>
