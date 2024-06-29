@@ -10,7 +10,7 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
  
 export const metadata: Metadata = {
-  title: 'Instructors',
+  title: 'Trainers',
 };
 
 export default async function Page({
@@ -31,10 +31,10 @@ export default async function Page({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Instructors</h1>
+        <h1 className={`${lusitana.className} text-2xl`}>Trainers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search instructors..." />
+        <Search placeholder="Search trainers..." />
         {isUserAdmin && <CreateInstructor />}
       </div>
        <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>

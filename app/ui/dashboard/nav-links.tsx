@@ -15,13 +15,13 @@ const links = [
   { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
   { name: 'Enrollment', href: '/dashboard/enrollment', icon: UserGroupIcon },
   { name: 'Classes', href: '/dashboard/classes', icon: DocumentDuplicateIcon },
-  { name: 'Instructors', href: '/dashboard/instructors', icon: UsersIcon },
+  { name: 'Trainers', href: '/dashboard/trainers', icon: UsersIcon },
 ];
 
 const adminLinks = [
   { name: 'Internship', href: '/dashboard/internship', icon: InformationCircleIcon },
   { name: 'Students', href: '/dashboard/registration', icon: UserGroupIcon },
-  { name: 'Instructors', href: '/dashboard/instructors', icon: UsersIcon },
+  { name: 'Trainers', href: '/dashboard/trainers', icon: UsersIcon },
   { name: 'Courses', href: '/dashboard/courses', icon: BriefcaseIcon },
   { name: 'Subjects', href: '/dashboard/subjects', icon: DocumentIcon },
 ];

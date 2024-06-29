@@ -4,7 +4,7 @@ import { fetchCourses } from '@/app/lib/data';
 import Form from '@/app/ui/instructors/register-form';
  
 export const metadata: Metadata = {
-  title: 'Create Instructor',
+  title: 'Create Trainer',
 };
  
 export default async function Page() {
@@ -13,10 +13,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Instructors', href: '/dashboard/instructors' },
+          { label: 'Trainers', href: '/dashboard/trainers' },
           {
-            label: 'Create Instructor',
-            href: '/dashboard/instructors/create',
+            label: 'Create Trainer',
+            href: '/dashboard/trainers/create',
             active: true,
           },
         ]}

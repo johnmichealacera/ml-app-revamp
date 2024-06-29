@@ -83,12 +83,12 @@ export default function Form({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/instructors"
+          href="/dashboard/trainers"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit">Edit Instructor</Button>
+        <Button type="submit">Edit Trainer</Button>
       </div>
     </form>
   );

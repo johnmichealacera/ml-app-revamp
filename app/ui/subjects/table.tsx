@@ -1,6 +1,3 @@
-import { fetchStudents, fetchSubjects, fetchUnEnrolledSubjects } from '@/app/lib/data';
-import { getUserdata } from '@/auth';
-
 export default async function RegistrationTable({
   subjects,
 }: {
