@@ -5,7 +5,7 @@ import {
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-// import { fetchCardData } from '@/app/lib/data';
+import { fetchSecondCardData } from '@/app/lib/data';
 
 const iconMap = {
   resolved: CheckBadgeIcon,
@@ -15,19 +15,19 @@ const iconMap = {
 };
 
 export default async function Announcements() {
-  // const { totalResolvedReports, totalPendingReports, totalReports, totalPersonnels } = await fetchCardData(userData?.department);
+  const { totalResolvedInstructors, totalCourses } = await fetchSecondCardData();
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
 
-      <Card title="Resolved Reports" value={5} type="resolved" />
-      <Card title="Pending Reports" value={4} type="pending" />
-      <Card title="Total Reports" value={9} type="reports" />
-      <Card
+      <Card title="Total Trainers" value={totalResolvedInstructors} type="resolved" />
+      <Card title="Total Courses" value={totalCourses} type="pending" />
+      {/* <Card title="Total Reports" value={9} type="reports" /> */}
+      {/* <Card
         title="Total Personnels"
         value={3}
         type="personnels"
-      />
+      /> */}
     </>
   );
 }

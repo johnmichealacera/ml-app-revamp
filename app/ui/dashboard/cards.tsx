@@ -5,7 +5,7 @@ import {
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-// import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData } from '@/app/lib/data';
 
 const iconMap = {
   resolved: CheckBadgeIcon,
@@ -15,17 +15,15 @@ const iconMap = {
 };
 
 export default async function CardWrapper() {
-  // const { totalResolvedReports, totalPendingReports, totalReports, totalPersonnels } = await fetchCardData(userData?.department);
+  const { totalResolvedStudentWelders, totalStudentComputerServicing, totalStudentBookeepingCount, totalStudents } = await fetchCardData();
   return (
     <>
-      {/* NOTE: comment in this code when you get to this point in the course */}
-
-      <Card title="Resolved Reports" value={5} type="resolved" />
-      <Card title="Pending Reports" value={4} type="pending" />
-      <Card title="Total Reports" value={9} type="reports" />
+      <Card title="Shielded Metal Arc Wielding" value={totalResolvedStudentWelders} type="resolved" />
+      <Card title="Computer Systems Servicing" value={totalStudentComputerServicing} type="pending" />
+      <Card title="Bookkeeping NC III" value={totalStudentBookeepingCount} type="reports" />
       <Card
-        title="Total Personnels"
-        value={3}
+        title="Total Students"
+        value={totalStudents}
         type="personnels"
       />
     </>

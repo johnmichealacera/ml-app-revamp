@@ -12,7 +12,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
   const fullName = `${userdata?.first_name} ${userdata?.middle_name} ${userdata?.last_name}`;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="bg-tec-voc-background-bgfc bg-cover bg-center h-screen flex flex-col h-screen">
       <header className="flex-none">
         <HeaderNav studentName={fullName} role={userdata?.role}/>
       </header>

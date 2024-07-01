@@ -4,6 +4,7 @@ const {
   users,
   courses,
   subjects,
+  studentsFromFile,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -272,16 +273,56 @@ async function seedInternships(client) {
   }
 }
 
+async function seedStudentsFromFile(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Iterate through each student data
+    for (const studentData of studentsFromFile) {
+      const { courseId, firstName, middleName, lastName, suffix, gender, civilStatus, birthday, birthPlace, nationality, religion, ethnicity, facebook, skype, zoom } = studentData;
+
+      try {
+        const hashedPassword = await bcrypt.hash('123456', 10);
+        const firstNameNoSpaces = firstName.replace(/\\s+/g, '');
+        const email = `${firstNameNoSpaces.toLowerCase()}${lastName.toLowerCase()}@nextmail.com`
+        const result = await client.sql`
+          INSERT INTO users (email, first_name, middle_name, last_name, suffix, password, role)
+          VALUES (${email}, ${firstName}, ${middleName}, ${lastName}, ${suffix}, ${hashedPassword}, 'student')
+          RETURNING id
+        `;
+        const newUser = result.rows[0];
+
+        // Insert into students table
+        await client.sql`
+          INSERT INTO students (user_id, gender, civil_status, birthday, birth_place, nationality, religion, ethnicity, facebook, skype, zoom_account, course_id)
+          VALUES
+          (${newUser.id}, ${gender}, ${civilStatus}, ${birthday}, ${birthPlace}, ${nationality}, ${religion}, ${ethnicity}, ${facebook}, ${skype}, ${zoom}, ${courseId})
+        `;
+        
+        console.log(`Student created: ${firstName} ${lastName}`);
+      } catch (error) {
+        console.error('Database Error:', error.message);
+      }
+    }
+
+    // After all students are processed, you may perform any necessary clean-up or logging.
+    console.log('Student seeding completed.');
+
+  } catch (error) {
+    console.error('Error reading or parsing JSON file:', error.message);
+  }
+}
+
 async function main() {
   const client = await db.connect();
   // await seedCourses(client);
   // await seedSubjects(client);
   // await seedUsers(client);
   // await seedStudents(client);
-  await seedEnrollments(client);
+  // await seedEnrollments(client);
   // await seedSchoolYear(client);
   // await seedInstructors(client);
   // await seedInternships(client);
+  await seedStudentsFromFile(client);
 
   await client.end();
 }

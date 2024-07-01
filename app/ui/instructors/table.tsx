@@ -34,10 +34,10 @@ export default async function RegistrationTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  First Name
+                  Last Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Last Name
+                  First Name
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -51,10 +51,10 @@ export default async function RegistrationTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
-                    <div className="truncate">{`${instructor.first_name} `}</div>
+                    <div className="truncate">{instructor.last_name}</div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
-                    <div className="truncate">{instructor.last_name}</div>
+                    <div className="truncate">{`${instructor.first_name} `}</div>
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

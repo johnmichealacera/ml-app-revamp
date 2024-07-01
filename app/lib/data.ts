@@ -249,6 +249,8 @@ export async function fetchStudents(
         users.first_name ILIKE ${`%${query}%`} OR
         users.last_name ILIKE ${`%${query}%`} OR
         courses.program_title ILIKE ${`%${query}%`}
+      ORDER BY
+        users.last_name ASC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
     `;
 
@@ -314,6 +316,8 @@ export async function fetchFilteredInstructors(query: string,
 		WHERE
       instructors.first_name ILIKE ${`%${query}%`} OR
       instructors.last_name ILIKE ${`%${query}%`}
+    ORDER BY
+        instructors.last_name ASC
     LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
 
@@ -444,5 +448,67 @@ export async function fetchInternshipById(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch internship.');
+  }
+}
+
+export async function fetchCardData() {
+  noStore();
+  try {
+    const resolvedStudentWeldersCountPromise = sql`SELECT COUNT(*) FROM students where students.course_id = '64ffa120-aa8a-4ab1-9396-4100342fb0f5'`;
+    const resolvedStudentComputerServicingCountPromise = sql`SELECT COUNT(*) FROM students where students.course_id = '17c19242-7bcf-455c-b771-6b2c50371245'`;
+    const resolvedStudentBookeepingCountPromise = sql`SELECT COUNT(*) FROM students WHERE students.course_id = '17c19242-7bcf-455c-b771-6b2c50371246'`;
+    const studentCountPromise = sql`SELECT COUNT(*) FROM students`;
+    const data = await Promise.all([
+      resolvedStudentWeldersCountPromise,
+      resolvedStudentComputerServicingCountPromise,
+      resolvedStudentBookeepingCountPromise,
+      studentCountPromise,
+    ]);
+
+    const totalResolvedStudentWelders = data[0].rows[0].count ?? '0';
+    const totalStudentComputerServicing = data[1].rows[0].count ?? '0';
+    const totalStudentBookeepingCount = data[2].rows[0].count ?? '0';
+    const totalStudents = data[3].rows[0].count ?? '0';
+    
+
+    return {
+      totalResolvedStudentWelders,
+      totalStudentComputerServicing,
+      totalStudentBookeepingCount,
+      totalStudents,
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch card data.');
+  }
+}
+
+export async function fetchSecondCardData() {
+  noStore();
+  try {
+    const resolvedInstructorsCountPromise = sql`SELECT COUNT(*) FROM instructors`;
+    const resolvedCoursesCountPromise = sql`SELECT COUNT(*) FROM courses`;
+    // const resolvedStudentBookeepingCountPromise = sql`SELECT COUNT(*) FROM students WHERE students.course_id = '17c19242-7bcf-455c-b771-6b2c50371246'`;
+    // const studentCountPromise = sql`SELECT COUNT(*) FROM students`;
+    const data = await Promise.all([
+      resolvedInstructorsCountPromise,
+      resolvedCoursesCountPromise,
+      // resolvedStudentBookeepingCountPromise,
+      // studentCountPromise,
+    ]);
+
+    const totalResolvedInstructors = data[0].rows[0].count ?? '0';
+    const totalCourses= data[1].rows[0].count ?? '0';
+    // const totalStudentBookeepingCount = data[2].rows[0].count ?? '0';
+    // const totalStudents = data[3].rows[0].count ?? '0';
+    
+
+    return {
+      totalResolvedInstructors,
+      totalCourses,
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch card data.');
   }
 }

@@ -18,6 +18,9 @@ const config: Config = {
           600: '#2F6FEB',
         },
       },
+      backgroundImage: {
+        'tec-voc-background-bgfc': "url('/tec-voc.png')"
+      }
     },
     keyframes: {
       shimmer: {

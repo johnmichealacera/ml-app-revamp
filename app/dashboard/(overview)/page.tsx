@@ -23,10 +23,6 @@ export default async function Page() {
       <br />
       <br />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {/* TODO: Think of what chart to add in here */}
-        {/* <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
-        </Suspense> */}
         <Suspense fallback={<LatestInvoicesSkeleton />}>
           <Announcements />
         </Suspense>
