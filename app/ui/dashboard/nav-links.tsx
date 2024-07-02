@@ -12,14 +12,14 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const links = [
-  { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
+  // { name: 'Internship', href: '/dashboard/internship', icon: BriefcaseIcon },
   { name: 'Enrollment', href: '/dashboard/enrollment', icon: UserGroupIcon },
   { name: 'Classes', href: '/dashboard/classes', icon: DocumentDuplicateIcon },
   { name: 'Trainers', href: '/dashboard/trainers', icon: UsersIcon },
 ];
 
 const adminLinks = [
-  { name: 'Internship', href: '/dashboard/internship', icon: InformationCircleIcon },
+  // { name: 'Internship', href: '/dashboard/internship', icon: InformationCircleIcon },
   { name: 'Students', href: '/dashboard/registration', icon: UserGroupIcon },
   { name: 'Trainers', href: '/dashboard/trainers', icon: UsersIcon },
   { name: 'Courses', href: '/dashboard/courses', icon: BriefcaseIcon },
