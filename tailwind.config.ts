@@ -17,6 +17,7 @@ const config: Config = {
           500: '#0070F3',
           600: '#2F6FEB',
         },
+        'tec-voc-color-logo': '#1558d6',
       },
       backgroundImage: {
         'tec-voc-background-bgfc': "url('/tec-voc.png')"

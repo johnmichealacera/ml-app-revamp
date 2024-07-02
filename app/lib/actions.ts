@@ -331,6 +331,9 @@ const InstructorFormSchema = z.object({
   firstName: z.string({
     invalid_type_error: 'Please enter a first name.',
   }),
+  middleName: z.string({
+    invalid_type_error: 'Please enter a middle name.',
+  }),
   lastName: z.string({
     invalid_type_error: 'Please enter a last name.',
   }),
@@ -341,6 +344,7 @@ export async function createInstructor(prevState: any, formData: FormData) {
   
   const validatedFields = CreateInstructor.safeParse({
     firstName: formData.get('firstName'),
+    middleName: formData.get('middleName'),
     lastName: formData.get('lastName'),
   });
   if (!validatedFields.success) {
@@ -349,19 +353,19 @@ export async function createInstructor(prevState: any, formData: FormData) {
       message: 'Missing Fields. Failed to Create Instructor.',
     };
   }
-  const { firstName, lastName } = validatedFields.data;
+  const { firstName, middleName, lastName } = validatedFields.data;
 
   try {
     await sql`
-      INSERT INTO instructors (first_name, last_name)
-      VALUES (${firstName}, ${lastName})
+      INSERT INTO instructors (first_name, middle_name, last_name)
+      VALUES (${firstName}, ${middleName}, ${lastName})
     `;
   } catch (error) {
     console.error('error', error);
     return { message: 'Database Error: Failed to Create Instructor.' };
   }
-  revalidatePath('/dashboard/instructors');
-  redirect('/dashboard/instructors');
+  revalidatePath('/dashboard/trainers');
+  redirect('/dashboard/trainers');
 }
 
 const UpdateInstructor = InstructorFormSchema;

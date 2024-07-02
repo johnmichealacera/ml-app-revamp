@@ -21,6 +21,7 @@ export default async function RegistrationTable({
                 <div className="flex flex-col w-full md:flex-row md:items-center md:justify-between md:pt-4">
                   <div className="md:w-1/2">
                     <p className="text-lg font-medium">{instructor.first_name}</p>
+                    <p className="text-lg font-medium">{instructor.middle_name}</p>
                     <p className="text-lg font-medium">{instructor.last_name}</p>
                   </div>
                   <div className="flex justify-end mt-2 md:mt-0 md:w-1/2 md:justify-end md:gap-2">
@@ -39,6 +40,9 @@ export default async function RegistrationTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   First Name
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Middle Name
+                </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -55,6 +59,9 @@ export default async function RegistrationTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 max-w-xs">
                     <div className="truncate">{`${instructor.first_name} `}</div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3 max-w-xs">
+                    <div className="truncate">{`${instructor.middle_name} `}</div>
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
